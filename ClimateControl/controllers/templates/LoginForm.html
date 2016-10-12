@@ -1,0 +1,71 @@
+﻿<!--https://github.com/alarv/ng-login-->
+<div class="modal-header" style="border-bottom-width:0px;">
+    <h3 class="modal-title" style="text-align:center;">{{vm.signupMode && 'Sign up' || 'Login'}}</h3>
+</div>
+<div class="modal-body">
+    <form role="form" name="::vm.loginForm" class="form-horizontal" ng-submit="::vm.submit()" novalidate>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons" style="font-size: 18px;">person</i>
+            </span>
+            <input type="text" class="form-control" name="username"
+                   ng-model="vm.credentials.username" placeholder="Username" required />
+        </div>
+        <div class="error animate-if"
+             ng-if="(vm.submitted  || vm.loginForm.username.$dirty)  && vm.loginForm.username.$invalid">
+            <p class="error animate-if" ng-if="vm.loginForm.username.$error.required">
+                'Username' is mandatory
+            </p>
+        </div>
+        <div style="margin-top: 25px" class="input-group">
+            <span class="input-group-addon">
+                <i class="material-icons" style="font-size: 18px;">lock</i>
+            </span>
+            <input type="password"
+                   class="form-control" name="password"
+                   ng-model="vm.credentials.password" placeholder="Password" required />
+        </div>
+        <div class="error animate-if"
+             ng-if="(vm.submitted  || loginForm.password.$dirty)  && vm.loginForm.password.$invalid">
+            <p class="error animate-if" ng-if="vm.loginForm.password.$error.required">
+                'Password' is mandatory
+            </p>
+        </div>
+        <div id="signup" ng-if="vm.signupMode" class="animate-if">
+            <div style="margin-top: 25px" class="input-group">
+                <span class="input-group-addon">
+                    <i class="material-icons" style="font-size: 18px;">lock</i>
+                </span>
+                <input type="password"
+                       class="form-control" name="confirm_password"
+                       ng-model="confirmed_password" placeholder="Re-type Password" ng-required="vm.signupMode"
+                       ui-validate="'!vm.signupMode || $value == vm.credentials.password'"
+                       ui-validate-watch="{signupMode:'vm.signupMode', password: 'vm.credentials.password'}"
+                       ui-validate-watch-object-equality="true" />
+            </div>
+            <div class="error animate-if"
+                 ng-if="vm.loginForm.confirm_password.$error.validator">
+                <p class="error">
+                    Passwords don't match
+                </p>
+            </div>
+        </div>
+        <div style="padding-top: 15px; margin-bottom: 0px;" class="form-group">
+            <div class="col-sm-6 controls">
+                <input type="submit" id="submit" class="btn btn-success"
+                       value="{{vm.signupMode && 'Sign up' || 'Login'}}" />
+            </div>
+            <div class="col-sm-6 controls" style="padding-top: 14px; text-align: right;">
+                <a style="cursor:pointer;" ng-click="vm.signupMode = !vm.signupMode">{{vm.signupMode && 'Login' || 'Sign up'}}</a>
+            </div>
+        </div>
+        <br>
+        <p ng-if="vm.error && vm.errorNumber == 2" class="error animate-if">
+            User already exists.
+        </p>
+        <p ng-if="vm.error && vm.errorNumber != 2" class="error animate-if">
+            The password or the username is incorrect. Please try again (make sure your caps lock is off).
+        </p>
+    </form>
+</div>
+

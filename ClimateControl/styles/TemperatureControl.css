@@ -1,0 +1,105 @@
+﻿#temperature-control {
+    position: relative;
+    height: 290px;
+    width: 290px;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    -o-transition: background 100ms linear;
+    -moz-transition: background 100ms linear;
+    -webkit-transition: background 100ms linear;
+    transition: background 100ms linear;
+    pointer-events: none; 
+}
+
+
+
+#increase-temp-button {
+    -webkit-border-radius: 50% 50% 0 0/ 100% 100% 0 0;
+    -moz-border-radius: 50% 50% 0 0/ 100% 100% 0 0;
+    -border-radius: 50% 50% 0 0/ 100% 100% 0 0;
+}
+
+#decrease-temp-button {
+    -webkit-border-radius: 0% 0% 50% 50%/ 0 0 100% 100%;
+    -moz-border-radius: 0% 0% 50% 50%/ 0 0 100% 100%;
+    -border-radius: 0% 0% 50% 50%/ 0 0 100% 100%;
+}
+
+#decrease-temp-button, #increase-temp-button {
+    background-color: transparent;
+    font-size: 200%;
+    width: 80%;
+    height: 25%;
+    border-width: 0;
+    /*padding: 10% 0 0 0;*/
+    border-style: hidden;
+    cursor: pointer;
+    outline: none !important;
+    pointer-events: auto;
+}
+
+#auto-button {
+    -webkit-border-top-left-radius: 45%;
+    -webkit-border-bottom-left-radius: 45%;
+}
+
+#manual-button {
+    -webkit-border-top-right-radius: 45%;
+    -webkit-border-bottom-right-radius: 45%;
+}
+
+#auto-button, #manual-button {
+    background-color: transparent;
+    text-align: center;  
+    font-size: 200%;
+    width: 30%;
+    height: 100%;
+    left: 0;
+    border-width: 0;
+    padding: 0;
+    border-style: hidden;
+    cursor: pointer;
+    outline: none !important;
+    pointer-events: auto;
+}
+
+#temperature-readings {
+    width:50%;
+    height:100%;
+    pointer-events: auto;
+    outline: none !important;
+    cursor: default;
+}
+
+#boiler-temperature {
+    font-size: 450%;
+    height:50%;
+    line-height:100%;
+}
+
+#room-temperature, #humidity {
+    font-size: 250%;
+}
+
+#room-temperature-humidity {
+    height:25%;
+}
+
+.ionicons {
+    font-size: 150%; 
+    pointer-events: auto;
+}
+
+.ion-flame {
+     font-size: 200%;
+     height:25%;
+}
+
+#boiler-temperature, #room-temperature, #humidity {
+    background-color: transparent;
+    margin: 0;   
+    font-weight: lighter;
+    text-align: center;    
+    pointer-events: auto;
+}

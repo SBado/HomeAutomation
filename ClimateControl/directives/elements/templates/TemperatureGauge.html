@@ -1,0 +1,9 @@
+﻿<div id="temperature-gauge" class="flexbox-column" ng-click="vm.manualMode && parentClick($event)">
+    <div id="boiler-temperature-arm" ng-click="$event.stopPropagation()" style="transition: -webkit-transform 1000ms ease; -webkit-transform: rotate({{calculateDegrees(vm.boilerTemperature.value)}}deg);"></div>
+    <div id="room-temperature-arm" ng-click="$event.stopPropagation()" style="transition: -webkit-transform 1000ms ease; -webkit-transform: rotate({{calculateDegrees(vm.roomTemperature)}}deg);"></div>
+    <ng-transclude id="temperature-ctrl" ng-click="vm.manualMode && childClick($event); $event.stopPropagation()"></ng-transclude>
+    <div id="temperature-trend" class="flexbox-column" ng-click="vm.manualMode && childClick($event); $event.stopPropagation()">
+        <span class="ionicons ion-arrow-up-b" ng-show="{{vm.trend == 'rising'}}"></span>
+        <span class="ionicons ion-arrow-down-b" ng-show="{{vm.trend == 'falling'}}"></span>
+    </div>
+</div>

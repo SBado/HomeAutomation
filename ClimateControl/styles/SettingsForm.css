@@ -1,0 +1,17 @@
+﻿.settings-label {
+    margin: 0;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.settings-icon {
+    font-size: 20px !important;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+
+.settings-footer {
+    padding-top: 15px;
+    margin-bottom: 0px;
+    text-align: right;
+}

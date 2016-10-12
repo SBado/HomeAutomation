@@ -1,0 +1,26 @@
+﻿<div id="slider-container" class="flexbox-column" ng-style="{'height': sliderHeight || '400px'}">
+    <label style="text-align:center;">{{selectedValue}}{{uom}}</label>
+    <div id="slider" style="height: 100%; margin-top:10px; margin-bottom:10px;" />
+    <div>
+        <button blur-after-click type="button" id="increase-value-button" class="btn btn-default circular-button fade-background-color flexbox-column"
+                long-press
+                delay="{{longPressDelay}}"
+                on-click="increaseValue()"
+                on-long-press-start="increaseValueLongPress();"
+                on-long-press-end="onLongPressEnd()">
+            +
+        </button>
+    </div>
+    <div style="margin-bottom:5px;"></div>
+    <div>        
+        <button blur-after-click type="button" id="decrease-value-button" class="btn btn-default circular-button fade-background-color flexbox-column"
+                long-press
+                delay="{{longPressDelay}}"
+                on-click="decreaseValue()"
+                on-long-press-start="decreaseValueLongPress();"
+                on-long-press-end="onLongPressEnd();">
+            -
+        </button>
+    </div>
+    <label style="text-align:center; margin-top:5px;">{{sliderId}}</label>
+</div>

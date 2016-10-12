@@ -1,0 +1,64 @@
+﻿<div id="temperature-control" class="flexbox-column" ng-style="{'background': background}">
+    <div class="animate-show flexbox-row" id="increase-temp-button" style="pointer-events: auto;"
+         long-press
+         delay="{{delay}}"
+         ng-show="vm.manualMode"
+         ng-mousedown="onMouseDown('increase-temp-button')"
+         ng-mouseup="onMouseUp()"
+         ng-mouseleave="onMouseLeave()"
+         ng-click="$event.stopPropagation()"
+         on-click="vm.increaseTemperature(true)"
+         on-long-press-start="onLongPressIncreaseTemp()"
+         on-long-press-end="onLongPressEnd()">
+        +
+    </div>
+    <div class="flexbox-row" style="width:100%; height:50%;">
+        <div id="auto-button" class="flexbox-row"
+             ng-mousedown="onMouseDown('auto-button')"
+             ng-mouseup="onMouseUp()"
+             ng-mouseleave="onMouseLeave()"
+             ng-click="vm.setManualMode(0); $event.stopPropagation()"
+             ng-style="{'background': 'radial-gradient(circle, rgba(197,202,233,' + (1 - vm.manualMode) + ') 25%, transparent 35%)'}">
+            A
+        </div>
+        <div id="temperature-readings" class="flexbox-column" ng-click="$event.stopPropagation()">
+                <label id="boiler-temperature">
+                    {{vm.boilerTemperature.value}}
+                </label>
+            <span class="ionicons ion-flame fade-opacity" ng-style="{'opacity': vm.isBurning ? 1 : 0}"></span>
+            <div id="room-temperature-humidity" class="flexbox-row">
+                <span class="ionicons ion-thermometer"></span>
+                <label id="room-temperature">
+                    {{vm.roomTemperature}}
+                </label>
+                <div style="width:20px;"></div>
+                <span class="ionicons ion-waterdrop"></span>
+                <label id="humidity">
+                    {{vm.humidity}}
+                </label>
+            </div>
+        </div>
+        <div id="manual-button" class="flexbox-row"
+             ng-mousedown="onMouseDown('manual-button')"
+             ng-mouseup="onMouseUp()"
+             ng-mouseleave="onMouseLeave()"
+             ng-click="vm.setManualMode(1); $event.stopPropagation()"
+             ng-style="{'background': 'radial-gradient(circle, rgba(197,202,233,' + vm.manualMode + ') 25%, transparent 35%)'}">
+            M
+        </div>
+        <!--</div>-->
+    </div>
+    <div class="animate-show flexbox-row" id="decrease-temp-button"
+         long-press
+         delay="{{delay}}"
+         ng-show="vm.manualMode"
+         ng-mousedown="onMouseDown('decrease-temp-button')"
+         ng-mouseup="onMouseUp()"
+         ng-mouseleave="onMouseLeave()"
+         ng-click="$event.stopPropagation()"
+         on-click="vm.lowerTemperature(true)"
+         on-long-press-start="onLongPressLowerTemp()"
+         on-long-press-end="onLongPressEnd()">
+        -
+    </div>
+</div>

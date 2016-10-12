@@ -1,0 +1,42 @@
+﻿<!--<button popover-placement="right" popover-animation="true" popover-title="The title." uib-popover="I fade in and out!" type="button" class="btn btn-default">fading</button>-->
+<div style="display: flex; flex-direction: row;">
+    <table class="table" style="background-color:#FAFAFA; margin-bottom:0; width:10%;">
+        <tbody>
+            <tr ng-repeat="record in vm.records" context-menu="::vm.emptyContextMenu" style="height:52px;">
+                <td class="day-column" context-menu="::vm.dayContextMenu">
+                    <label class="day-label">
+                        <a class="day-link fade-color" href="#/home/dayscheduler/{{::record.day}}">{{::record.day}}</a>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="table-responsive" style="overflow-y:hidden; width:90%;">
+        <table class="table" style="background-color:#FAFAFA; margin-bottom:0;">
+            <tbody>
+                <tr ng-repeat="record in vm.records" context-menu="::vm.emptyContextMenu">
+                    <!--<td class="day-column" context-menu="::vm.dayContextMenu">
+                        <label class="day-label">
+                            <a class="day-link fade-color" href="#/home/dayscheduler/{{::record.day}}">{{::record.day}}</a>
+                        </label>
+                    </td>-->
+                    <td ng-repeat="value in record.values">
+                        <button type="button" class="btn btn-default circular-button fade-background-color flexbox-row"
+                                ng-click="vm.onClick(record.day, value.hour, value.temperature)"
+                                ng-style="vm.currentHourStyle(record.day, value.hour)"
+                                context-menu="::vm.hourContextMenu" model="record">
+                            {{value.temperature}}
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td ng-repeat="hour in ::vm.hours"><div style="width: 35px; height: 35px; font-weight: bold;">{{::hour}}</div></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+

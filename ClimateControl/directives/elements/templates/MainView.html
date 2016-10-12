@@ -1,0 +1,67 @@
+﻿<md-toolbar class="md-whiteframe-8dp">
+    <h2 class="md-toolbar-tools">
+        <div>
+            <md-tooltip md-autohide="true">Menu</md-tooltip>
+            <md-button class="md-icon-button" ng-click="vm.openSideNavPanel()">
+                <md-icon class="md-default-theme material-icons">menu</md-icon>
+            </md-button>
+        </div>
+        <span>{{vm.pageTitle || 'Climate Control'}}</span>
+        <span flex=""></span>
+        <span>{{currentUser}}</span>
+    </h2>
+</md-toolbar>
+<md-sidenav class="md-sidenav-left" md-component-id="left">
+    <md-toolbar layout="row">
+        <div class="md-toolbar-tools">
+            <i class="material-icons" style="margin-right:10px;">wb_sunny</i>
+            <h2>
+                Climate Control
+            </h2>
+            <span flex></span>
+            <md-button class="md-icon-button" aria-label="Close Side Panel" ng-click="vm.closeSideNavPanel()">
+                <md-tooltip md-autohide="true">Close Menu</md-tooltip>
+                <i class="material-icons">close</i>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-content layout-padding="">
+        <md-list>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Navigate</md-subheader>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">pan_tool</i> 
+                <p ng-click="::vm.goTo('home.manualcontrol')">Manual Control</p>
+            </md-list-item>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">today</i> 
+                <p ng-click="::vm.goToDayScheduler()">Day Scheduler</p>
+            </md-list-item>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">date_range</i>                 
+                <p ng-click="::vm.goTo('home.weekscheduler')">Week Scheduler</p>
+            </md-list-item>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">event</i> 
+                <p ng-click="::vm.goTo('home.monthscheduler')">Month Scheduler</p>
+            </md-list-item>
+            <md-divider></md-divider>
+            <md-subheader class="md-no-sticky">Tools</md-subheader>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">settings</i>
+                <p ng-click="::vm.showSettings()">Settings</p>
+            </md-list-item>
+            <md-list-item>
+                <i class="material-icons" style="margin-right:10px;">exit_to_app</i>                
+                <p ng-click="::vm.logOut()">Logout</p>
+            </md-list-item>
+        </md-list>
+    </md-content>
+</md-sidenav>
+<!---->  
+<md-content class="md-whiteframe-8dp" style="margin-left:5%; margin-right:5%; margin-top:2%;" ng-show="userAuthenticated()">
+    <div class="overlay flexbox-row" ng-show="loadingView">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <md-content ui-view="schedulers"></md-content>
+</md-content>

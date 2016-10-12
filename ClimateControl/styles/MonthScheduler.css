@@ -1,0 +1,20 @@
+﻿.uib-datepicker {
+    margin-bottom: 5px;
+}
+
+.btn.btn-default.btn-sm.btn-info.active {
+    background-color: rgb(230,230,230);
+    color: black !important;
+}
+
+.today button span {
+    border: 1px solid rgb(49,156,213);
+    border-radius: 50%;
+    background-color: rgb(49,156,213);
+    color: white;
+}
+
+.scheduled button span {
+    border: 2px solid rgb(219, 50, 54);
+    border-radius: 50%;
+}

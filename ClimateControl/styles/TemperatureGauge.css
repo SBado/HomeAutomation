@@ -1,0 +1,50 @@
+﻿#temperature-gauge {
+    position: relative;
+    height: 360px;
+    width: 360px;
+    background-color: #C5CAE9;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border-radius: 50%;
+    outline: none !important;
+}
+
+#room-temperature-arm {
+    /*background: #E8EAF6;*/
+    background: linear-gradient(90deg, rgb(230,230,230) 15%, transparent 15%);
+    height: 2%;
+    left: 0%;
+    position: absolute;
+    top: 49%;
+    transform-origin: 100% 50%;
+    width: 50%;
+    z-index: 1;
+    outline: none !important;
+}
+
+#boiler-temperature-arm {
+    /*background-color: #FAFAFA;*/
+    background: linear-gradient(90deg, transparent 5%, #FAFAFA 5%);
+    height: 2%;
+    left: 0%;
+    position: absolute;
+    top: 49%;
+    transform-origin: 100% 50%;
+    width: 50%;
+    outline: none !important;
+}
+
+#temperature-trend {
+    width: 10%;
+    height: 10%;
+    top: 90%;
+    left: 45%;
+    position: absolute;
+    color: white;
+    font-size: 200%;
+    outline: none !important;
+}
+
+#temperature-ctrl {
+    outline: none !important;
+}

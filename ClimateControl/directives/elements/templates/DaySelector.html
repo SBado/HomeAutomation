@@ -1,0 +1,12 @@
+﻿<div id="day-footer" class="flexbox-row">
+    <div id="day-buttongroup">
+        <div style="display:table-cell; vertical-align: middle;" ng-repeat="day in ::vm.days">
+            <button blur-after-click type="button" class="btn btn-default circular-button fade-background-color day-button flexbox-column" ng-class="{today : day == vm.today}"
+                    ng-click="vm.changeDay(day)">
+                {{day.substring(0, 3)}}
+            </button>
+            <!--</a>-->
+            <label class="fade-opacity flexbox-column" style="color:rgb(170,170,170);" ng-style="vm.daySelectorStyle(day)">&mdash;</label>
+        </div>
+    </div>
+</div>
