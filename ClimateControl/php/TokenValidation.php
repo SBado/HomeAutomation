@@ -8,7 +8,7 @@ function isTokenValid() {
     OAuth2\Autoloader::register();
 
     /* for a Resource Server (minimum config) */
-    $publicKey  = file_get_contents('../keys/id_rsa.pub');
+    $publicKey  = file_get_contents('../keys/id_rsa.pub');    
 
     // no private key necessary
     $keyStorage = new OAuth2\Storage\Memory(array('keys' => array(
@@ -20,11 +20,11 @@ function isTokenValid() {
     ));
 
     // verify the JWT Access Token in the request
-    if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {
-        //exit("Failed");
+    if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {                
         return false;
     }
 
+	error_log('AUTHORIZED');
     return true;
 }
 

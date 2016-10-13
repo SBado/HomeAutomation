@@ -35,8 +35,7 @@
 
     $dbm = new DatabaseManager();
     $dbm->open();
-    $result = $dbm->read_user($username, $password);
-    error_log(print_r($result, true)); 
+    $result = $dbm->read_user($username, $password);    
     if (!$result['data']) {
         http_response_code(404);
         echo json_encode(array('error' => 'User not found'));
@@ -58,9 +57,7 @@
     $server = new OAuth2\Server($storage, array(
         'use_jwt_access_tokens' => true,
     ));
-    $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));
-
-    error_log(print_r($storage, true));
+    $server->addGrantType(new OAuth2\GrantType\ClientCredentials($storage));    
 
     // send the response
     $server->handleTokenRequest(OAuth2\Request::createFromGlobals())->send();

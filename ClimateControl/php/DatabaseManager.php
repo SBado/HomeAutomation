@@ -116,10 +116,7 @@ EOF;
             return array('data' => null, 'error' => null);
         $value = $row[$column];
         if ($column == 'Date')
-                $value = $this->date_to_ISOString($value);
-        error_log('build_output_single_value');
-        error_log(print_r($column, true));
-        error_log(print_r($value, true));
+                $value = $this->date_to_ISOString($value);        
         return array('data' => $value, 'error' => null);
     }
 
@@ -774,8 +771,7 @@ EOF;
             VALUES(:username, :password);
 EOF;
        
-        $hash = password_hash($password, PASSWORD_BCRYPT);
-
+        $hash = password_hash($password, PASSWORD_BCRYPT);       
         $stmt = $this->db->prepare($sql); 
         $stmt->bindValue(':username', $username);
         $stmt->bindValue(':password', $hash);
@@ -803,7 +799,7 @@ EOF;
             return array('data' => null, 'error' => 'Query validate_user Failed');
 
         $row = $result->fetchArray(SQLITE3_ASSOC);
-        $hash = $row['Password']; 
+        $hash = $row['Password'];       
         $valid = password_verify($password , $hash);
 
         return array('data' => $valid, 'error' => null);
@@ -861,7 +857,8 @@ EOF;
         $this->reset_scheduled_temps_table();
         $this->reset_configs_table();
         $this->reset_users_table();
-                    }            
+	}   
+                             
     public function exec_method(){
         //parse_str(parse_url($url, PHP_URL_QUERY), $array);
         //var_dump($array);

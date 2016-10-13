@@ -182,8 +182,7 @@ class DatabaseManagerApi extends API
                 if (count($args) > 0)
                     throw new Exception('Too many Arguments');                                
                 $this->dbm->open();
-                $result = $this->dbm->read_scheduled_dates();
-                error_log(print_r( $result, true ));        
+                $result = $this->dbm->read_scheduled_dates();                     
                 $this->dbm->close();
                 return $result;            
                 break;           

@@ -47,7 +47,9 @@ abstract class API
         header("Content-Type: application/json");
 
         $this->args = explode('/', rtrim($request, '/'));
+        error_log(print_r($this->args, true));
         $this->endpoint = array_shift($this->args);
+        error_log(print_r($this->endpoint, true));
         //if (array_key_exists(0, $this->args) && !is_numeric($this->args[0])) {
         //    $this->verb = array_shift($this->args);
         //}

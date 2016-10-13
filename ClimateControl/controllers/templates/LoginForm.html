@@ -1,4 +1,9 @@
 ﻿<!--https://github.com/alarv/ng-login-->
+<div class="overlay flexbox-column" ng-show="vm.loading">
+        <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        <p class="info animate-if" ng-if="vm.signing" style="margin-top:10px;">Signing Up...</p>
+        <p class="info animate-if" ng-if="vm.logging" style="margin-top:10px;">Logging In...</p>
+</div>
 <div class="modal-header" style="border-bottom-width:0px;">
     <h3 class="modal-title" style="text-align:center;">{{vm.signupMode && 'Sign up' || 'Login'}}</h3>
 </div>
@@ -60,6 +65,7 @@
             </div>
         </div>
         <br>
+<!--        <md-progress-circular md-mode="indeterminate" ng-if="vm.loading" class="animate-if"></md-progress-circular>-->
         <p ng-if="vm.error && vm.errorNumber == 2" class="error animate-if">
             User already exists.
         </p>

@@ -190,6 +190,14 @@
     z-index: 5;
 }
 
+.transparent-overlay {
+    background-color: rgba(250,250,250, 0.5);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 5;
+}
+
 .modal {
     text-align: center;
     padding: 0 !important;
@@ -212,6 +220,10 @@
 .error {
     color: #FF9494;
 }
+
+.info {
+	color: #106CC8;
+} 
 
 ::-webkit-scrollbar {
     width: 8px;
