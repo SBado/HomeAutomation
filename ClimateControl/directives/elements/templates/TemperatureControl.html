@@ -17,8 +17,7 @@
              ng-mousedown="onMouseDown('auto-button')"
              ng-mouseup="onMouseUp()"
              ng-mouseleave="onMouseLeave()"
-             ng-click="vm.setManualMode(0); $event.stopPropagation()"
-             ng-class="{'not-selected': vm.manualMode}"
+             ng-click="vm.setManualMode(0); $event.stopPropagation()"             
              ng-style="{'background': 'radial-gradient(circle, rgba(197,202,233,' + (1 - vm.manualMode) + ') 25%, transparent 35%)'}">
             A
         </div>
@@ -43,8 +42,7 @@
              ng-mousedown="onMouseDown('manual-button')"
              ng-mouseup="onMouseUp()"
              ng-mouseleave="onMouseLeave()"
-             ng-click="vm.setManualMode(1); $event.stopPropagation()"
-             ng-class="{'not-selected': !vm.manualMode }"
+             ng-click="vm.setManualMode(1); $event.stopPropagation()"             
              ng-style="{'background': 'radial-gradient(circle, rgba(197,202,233,' + vm.manualMode + ') 25%, transparent 35%)'}">
             M
         </div>

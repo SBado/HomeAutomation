@@ -39,6 +39,14 @@
     pointer-events: auto;
 }
 
+	/*#increase-temp-button:hover {
+		background: radial-gradient(circle, #E57373 17%, transparent 25%) !important
+	}
+	
+	#decrease-temp-button:hover {
+		background: radial-gradient(circle, #C5CAE9 17%, transparent 25%) !important
+	}*/
+
 #auto-button {
     -webkit-border-top-left-radius: 45%;
     -webkit-border-bottom-left-radius: 45%;
@@ -64,9 +72,9 @@
     pointer-events: auto;
 }
 
-.not-selected {
-    background: radial-gradient(circle, transparent 25%, rgb(197,202,233) 25%, transparent 30%) !important
-}
+/*.not-selected:hover {
+    background: radial-gradient(circle, transparent 25%, rgb(197,202,233) 25%, transparent 27.5%) !important
+}*/
 
 #temperature-readings {
     width:50%;
