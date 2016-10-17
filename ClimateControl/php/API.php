@@ -8,6 +8,9 @@
     if (!array_key_exists('HTTP_ORIGIN', $_SERVER)) {
         $_SERVER['HTTP_ORIGIN'] = $_SERVER['SERVER_NAME'];
     }
+    
+    error_log('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    error_log(print_r($_REQUEST['request'], true));
 
     try {
         $API = new DatabaseManagerApi($_REQUEST['request'], $_SERVER['HTTP_ORIGIN']);

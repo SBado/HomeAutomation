@@ -20,9 +20,9 @@
         var _eventHandlers = [];
 
         function init() {
-            if (!$scope.currentUser)
+            /*if (!$scope.currentUser)
                 $scope.currentUser = UserService.getCurrentUser();
-
+*/
             _eventHandlers.push($rootScope.$on('$stateChangeSuccess', function (e, curr, prev) {
                 setPageTitle(curr.name);
             }));

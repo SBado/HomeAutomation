@@ -8,15 +8,16 @@
 
         function init() {
             $scope.loginShown = false;
-            $scope.currentUser = null;
+            $scope.loggedUser = {};
+            $scope.loggedUser.name = UserService.getLoggedUser();             
             $scope.userAuthenticated = AuthenticationService.userAuthenticated;
 
             //listen to events of unsuccessful logins, to run the login dialog
             $rootScope.$on(AUTH_EVENTS.notAuthenticated, showLoginDialog);
             $rootScope.$on(AUTH_EVENTS.sessionTimeout, showLoginDialog);
             $rootScope.$on(AUTH_EVENTS.logoutSuccess, showLoginDialog);
-            $rootScope.$on(AUTH_EVENTS.logoutSuccess, unsetCurrentUser);
-            $rootScope.$on(AUTH_EVENTS.loginSuccess, setCurrentUser);
+            $rootScope.$on(AUTH_EVENTS.logoutSuccess, unsetLoggedUser);
+            $rootScope.$on(AUTH_EVENTS.loginSuccess, setLoggedUser);
         }
         function showLoginDialog() {
             if (!$scope.loginShown) {
@@ -32,12 +33,11 @@
                 });
             }
         };
-        function setCurrentUser() {
-            $scope.currentUser = UserService.getCurrentUser();
+        function setLoggedUser() {        	 
+            $scope.loggedUser.name = UserService.getLoggedUser();
         }
-        function unsetCurrentUser() {
-            $scope.currentUser = '';
-            UserService.unsetCurrentUser();
+        function unsetLoggedUser() {
+            $scope.loggedUser.name = null;           
         }
 
         init();

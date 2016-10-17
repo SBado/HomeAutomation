@@ -91,7 +91,7 @@ class DatabaseManagerApi extends API
     //    }
     //}    
 
-    function daily_temps($args) {        
+    function daily_temps($args) {         	  
         switch ($this->method) {
             case 'GET':
                 if(count($args) > 2)

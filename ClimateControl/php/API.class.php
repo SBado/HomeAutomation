@@ -46,6 +46,7 @@ abstract class API
         header("Access-Control-Allow-Methods: *");
         header("Content-Type: application/json");
 
+		error_log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
         $this->args = explode('/', rtrim($request, '/'));
         error_log(print_r($this->args, true));
         $this->endpoint = array_shift($this->args);

@@ -9,7 +9,7 @@
         console.log('UserService instantiated');
 
         var self = this;
-        var currentUser = null;
+        var loggedUser = null;
 
         function validateUser(username, password) {
             var promise = SQLiteService.users().get({ username: username, password: password });
@@ -24,28 +24,28 @@
         function deleteUser(username) {
             return SQLiteService.users().delete({ username: username });
         }
-        function getCurrentUser() {
-            if (!currentUser && $window.sessionStorage['currentUser']) {
-                currentUser = $window.sessionStorage['currentUser'];
+        function getLoggedUser() {
+            if (!loggedUser && $window.sessionStorage['loggedUser']) {
+                loggedUser = $window.sessionStorage['loggedUser'];
             }
-            return currentUser;
+            return loggedUser;
         }
-        function setCurrentUser(username) {
-            currentUser = username;
-            $window.sessionStorage['currentUser'] = currentUser
+        function setLoggedUser(username) {
+            loggedUser = username;
+            $window.sessionStorage['loggedUser'] = loggedUser
         }
-        function unsetCurrentUser() {
-            currentUser = '';
-            $window.sessionStorage.removeItem('currentUser');
+        function unsetLoggedUser() {
+            loggedUser = null;
+            $window.sessionStorage.removeItem('loggedUser');
         }
 
         this.validateUser = validateUser;
         this.createUser = createUser;
         this.updateUser = updateUser;
         this.deleteUser = deleteUser;
-        this.getCurrentUser = getCurrentUser;
-        this.setCurrentUser = setCurrentUser;
-        this.unsetCurrentUser = unsetCurrentUser;
+        this.getLoggedUser = getLoggedUser;
+        this.setLoggedUser = setLoggedUser;
+        this.unsetLoggedUser = unsetLoggedUser;
 
         return this;
     }

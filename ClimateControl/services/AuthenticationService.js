@@ -40,7 +40,7 @@
             );
             promise.then(function successCallback(response) {
                 TokenService.setToken(response.data.access_token);
-                UserService.setCurrentUser(user.username);
+                UserService.setLoggedUser(user.username);
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess);
                 success(response.data.access_token);
             }, function errorCallback(e) {
@@ -58,7 +58,7 @@
         //log out the user and broadcast the logoutSuccess event
         self.logOut = function () {
             TokenService.deleteToken();
-            UserService.unsetCurrentUser();
+            UserService.unsetLoggedUser();
             $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess);
         }
 

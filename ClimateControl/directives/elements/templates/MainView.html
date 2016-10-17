@@ -8,7 +8,7 @@
         </div>
         <span>{{vm.pageTitle || 'Climate Control'}}</span>
         <span flex=""></span>
-        <span>{{currentUser}}</span>
+        <span>{{loggedUser.name}}</span>
     </h2>
 </md-toolbar>
 <md-sidenav class="md-sidenav-left" md-component-id="left">
@@ -29,31 +29,31 @@
         <md-list>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Navigate</md-subheader>
-            <md-list-item>
+            <md-list-item ng-click="::vm.goTo('home.manualcontrol')">
                 <i class="material-icons" style="margin-right:10px;">pan_tool</i> 
-                <p ng-click="::vm.goTo('home.manualcontrol')">Manual Control</p>
+                <p>Manual Control</p>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-click="::vm.goToDayScheduler()">
                 <i class="material-icons" style="margin-right:10px;">today</i> 
-                <p ng-click="::vm.goToDayScheduler()">Day Scheduler</p>
+                <p>Day Scheduler</p>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-click="::vm.goTo('home.weekscheduler')">
                 <i class="material-icons" style="margin-right:10px;">date_range</i>                 
-                <p ng-click="::vm.goTo('home.weekscheduler')">Week Scheduler</p>
+                <p>Week Scheduler</p>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-click="::vm.goTo('home.monthscheduler')">
                 <i class="material-icons" style="margin-right:10px;">event</i> 
-                <p ng-click="::vm.goTo('home.monthscheduler')">Month Scheduler</p>
+                <p>Month Scheduler</p>
             </md-list-item>
             <md-divider></md-divider>
             <md-subheader class="md-no-sticky">Tools</md-subheader>
-            <md-list-item>
+            <md-list-item ng-click="::vm.showSettings()">
                 <i class="material-icons" style="margin-right:10px;">settings</i>
-                <p ng-click="::vm.showSettings()">Settings</p>
+                <p>Settings</p>
             </md-list-item>
-            <md-list-item>
+            <md-list-item ng-click="::vm.logOut()">
                 <i class="material-icons" style="margin-right:10px;">exit_to_app</i>                
-                <p ng-click="::vm.logOut()">Logout</p>
+                <p>Logout</p>
             </md-list-item>
         </md-list>
     </md-content>

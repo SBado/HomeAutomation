@@ -1,10 +1,13 @@
 <?php
 
+define('DB_PATH', $_SERVER['DOCUMENT_ROOT'] . '/ClimateControl/database/database.sqlite');
+
 class DatabaseManager
 {
     private $db = null;
     private $errmsg = null;
     private $error = array('errnum' => null, 'errmsg' => null);
+    
     //// [Singleton]
     //private static $instance = null;
 
@@ -28,13 +31,15 @@ class DatabaseManager
     //// [/Singleton]
 
     public function __construct() {
-        $this->db = new SQlite3('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);                 
+        //$this->db = new SQlite3('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+        $this->db = new SQlite3(DB_PATH, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);                 
         $this->init();            
     }
 
     public function open() {
         try {
-            $this->db->open('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);  
+            //$this->db->open('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+            $this->db->open(DB_PATH, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);  
             $this->db->busyTimeout(10000);          
         }
         catch(Exception $e) {

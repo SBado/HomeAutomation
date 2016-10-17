@@ -64,6 +64,10 @@
     pointer-events: auto;
 }
 
+.not-selected {
+    background: radial-gradient(circle, transparent 25%, rgb(197,202,233) 25%, transparent 30%) !important
+}
+
 #temperature-readings {
     width:50%;
     height:100%;
