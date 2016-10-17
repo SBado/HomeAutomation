@@ -14,6 +14,10 @@
         $httpProvider.interceptors.push('HttpInterceptor', 'AuthInterceptor');
         //$httpProvider.interceptors.push('AuthInterceptor');
     });
+    
+    app.config(function ($resourceProvider) {
+  		$resourceProvider.defaults.stripTrailingSlashes = false;
+	});
 
     app.config(['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
 

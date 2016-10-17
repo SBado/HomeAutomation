@@ -10,7 +10,7 @@
 
         this.daily_temps = function () {
 
-            var resource = $resource('api/daily_temps/:day/:hour/:temperature', { day: '@day', hour: '@hour', temperature: '@temperature' },
+            var resource = $resource('api/daily_temps/:day/:hour/:temperature/', { day: '@day', hour: '@hour', temperature: '@temperature' },
                 {
                     'get': {
                         method: 'GET',
@@ -24,7 +24,7 @@
 
         this.scheduled_temps = function () {
 
-            var resource = $resource('api/scheduled_temps/:timespan/:temperatures', { timespan: '@timespan', temperatures: '@temperatures' },
+            var resource = $resource('api/scheduled_temps/:timespan/:temperatures/', { timespan: '@timespan', temperatures: '@temperatures' },
                 {
                     'get': {
                         method: 'GET',
@@ -38,7 +38,7 @@
 
         this.scheduled_days = function () {
 
-            var resource = $resource('api/scheduled_days', { },
+            var resource = $resource('api/scheduled_days/', { },
                 {
                     'get': {
                         method: 'GET',
@@ -51,7 +51,7 @@
 
         this.configs = function () {
 
-            var resource = $resource('api/configs/:key/:value', { key: '@key', value: '@value' },
+            var resource = $resource('api/configs/:key/:value/', { key: '@key', value: '@value' },
                  {
                      'get': {
                          method: 'GET',
@@ -65,7 +65,7 @@
 
         this.users = function () {
 
-            var resource = $resource('api/users/:username/:password', { username: '@username', password: '@password' },
+            var resource = $resource('api/users/:username/:password/', { username: '@username', password: '@password' },
                  {
                      'get': {
                          method: 'GET',
