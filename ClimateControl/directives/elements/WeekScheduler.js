@@ -50,33 +50,33 @@
             vm.hourContextMenu = [
                 ['Copy', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
-                }],
-                null,
+                }],                
                 ['Copy To Day', function ($itemScope, $event, model) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
                     setSameTempForDay(model.day, $itemScope.value.temperature);
-                }],
-                null,
+                }],                
                 ['Copy To All', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
                     setSameTempForAll($itemScope.value.temperature);
-                }],
-                null,
+                }],                
                 ['Paste', function ($itemScope, $event, model) {
                     //$itemScope.value.temperature = _clipboard.get().values[0];
                     setTempForHour(model.day, $itemScope.value.hour, _clipboard.get().values[0]);
                 }, function ($itemScope) {
                     return _clipboard.get().values.length == 1 && _clipboard.get().type === _clipboardType.HOUR;
                 }],
-                null,
                 ['Reset', function ($itemScope, $event, model) {
                     $confirm({ text: 'Are you sure you want to reset ' + model.day + ' at ' + $itemScope.value.hour + '?' }, { animation: true, size: 'sm' }).then(function () {
                         setTempForHour(model.day, $itemScope.value.hour, 2.0);
                     })
-                }],
-                null,
-                ['Reset All', function ($itemScope) {
-                    $confirm({ text: 'Are you sure you want to reset all days?' }, { animation: true, size: 'sm' }).then(function () {
+                }],                
+                ['Reset Day', function ($itemScope, $event, model) {
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + model.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
+                        setSameTempForDay(model.day, 2.0);
+                    })
+                }],                
+                ['Reset All Days', function ($itemScope) {
+                    $confirm({ title: 'Warning', text: 'Are you really sure you want to reset all days?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {                     
                         setSameTempForAll(2.0);
                     })
                 }]
@@ -84,27 +84,23 @@
             vm.dayContextMenu = [
                 ['Copy Day', function ($itemScope) {
                     _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.record.day));
-                }],
-                null,
+                }],                
                 ['Copy Day To All', function ($itemScope) {
                     _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.record.day));
                     setDifferentTempsForAll(_clipboard.get().values);
-                }],
-                null,
+                }],                
                 ['Paste Day', function ($itemScope) {
                     setDifferentTempsForDay($itemScope.record.day, _clipboard.get().values);
                 }, function () {
                     return _clipboard.get().values.length == 24 && _clipboard.get().type === _clipboardType.DAY;
                 }],
-                null,
                 ['Reset Day', function ($itemScope) {
-                    $confirm({ text: 'Are you sure you want to reset ' + $itemScope.record.day + '?' }, { animation: true, size: 'sm' }).then(function () {
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + $itemScope.record.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
                         setSameTempForDay($itemScope.record.day, 2.0);
                     })
-                }],
-                null,
+                }],                
                 ['Reset All Days', function ($itemScope) {
-                    $confirm({ text: 'Are you sure you want to reset all days?' }, { animation: true, size: 'sm' }).then(function () {
+                    $confirm({ title: 'Warning', text: 'Are you really sure you want to reset all days?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
                         setSameTempForAll(2.0);
                     })
                 }]
@@ -137,15 +133,15 @@
         function openModal(day, hour, temperature) {
             var modalInstance = $uibModal.open({
                 animation: true,
-                template: '<div class="modal-header" style="border-bottom-width: 0px;">\
-                             <h3 class="modal-title" style="text-align: center;">' + day + ' ' + hour + '</h3>\
+                template: '<div class="modal-header">\
+                             <h3 class="modal-title">' + day + ' ' + hour + '</h3>\
                            </div>\
                            <div class="modal-body">\
                              <div style="background-color: rgb(245,245,245); padding-top: 8px; padding-bottom: 8px; border-style: solid; border-width: 1px 0.5px 0.5px 0.5px; border-color: #ddd; border-radius: 6px;">\
                                <slider min="2" max="35" step="0.1" selected-value="vm.temperature" uom="°"></slider>\
                              </div>\
                            </div>\
-                           <div class="modal-footer" style="border-top-width: 0px;">\
+                           <div class="modal-footer">\
                              <button type="button" class="btn btn-default btn-sm fade-background-color" ng-click="vm.onOk()">OK</button>\
                              <button type="button" class="btn btn-default btn-sm fade-background-color" ng-click="vm.onCancel()">Cancel</button>\
                            </div>',

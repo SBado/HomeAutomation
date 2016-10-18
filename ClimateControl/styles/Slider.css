@@ -1,7 +1,23 @@
 ﻿.ui-slider-vertical .ui-state-default {
-    background: rgb(230,230,230);
-    border: 1px solid rgb(173,173,173);
+    background: #F5F5F5;
+    border: 1px solid #ADADAD;
     border-radius: 50%;
+}
+
+﻿	.ui-slider-vertical:hover, .ui-state-default:hover {
+    	background: #E6E6E6;  
+	}
+
+	.ui-slider-vertical .ui-state-default:active {
+    	background: #C5CAE9;
+	}
+
+	.ui-slider-vertical .ui-state-default:focus {
+   		outline: 0;
+	}
+
+div.ui-slider-range.ui-widget-header {
+    background: rgb(230,230,230);
 }
 
 @media (max-width: 768px) {
@@ -18,14 +34,4 @@
     }
 }
 
-.ui-slider-vertical .ui-state-default:active {
-    background: rgb(230,230,230);
-}
 
-.ui-slider-vertical .ui-state-default:focus {
-    outline: 0;
-}
-
-div.ui-slider-range.ui-widget-header {
-    background: rgb(230,230,230);
-}

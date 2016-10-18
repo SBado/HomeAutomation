@@ -28,7 +28,25 @@
     padding-left: 7px;
 }
 
+.day-link {
+    color: black !important;
+    text-decoration: none !important;
+}
 
+    .day-link:visited {
+        color: black !important;
+        text-decoration: none !important;
+    }
+
+    .day-link:hover {
+        color: black !important;
+        text-decoration: none !important;
+    }
+
+    .day-link:active {
+        color: black !important;
+        text-decoration: none !important;
+    }
 
 .modal.fade .modal-dialog {
     -webkit-transform: translate(0, 0);

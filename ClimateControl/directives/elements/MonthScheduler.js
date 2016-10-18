@@ -82,26 +82,23 @@
                     });
                 }, function () {
                     return _scheduledDays.indexOf(UTCDate.toISOString()) != -1;
-                }],
-                null,
+                }],                
                 ['Paste', function () {
                     _timespan = TimeService.getJSONTimeSpan(date, TimeService.timeSpanType.DAY);
                     saveSchedule(_clipboard.get().values);
                 }, function () {
                     return _clipboard.get().values.length == 24 && _clipboard.get().type === _clipboardType.DAY;
-                }],
-                null,
-                ['Delete', function () {
-                    $confirm({ text: 'Are you sure you want to delete?' }, { animation: true, size: 'sm' }).then(function () {
+                }],                
+                ['Delete Day', function () {
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to delete?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
                         _timespan = TimeService.getJSONTimeSpan(date, TimeService.timeSpanType.DAY);
                         deleteSchedule();
                     })
                 }, function () {
                     return _scheduledDays.indexOf(UTCDate.toISOString()) != -1;
-                }],
-                null,
-                ['Delete All', function () {
-                    $confirm({ text: 'Are you sure you want to delete?' }, { animation: true, size: 'sm' }).then(function () {
+                }],                
+                ['Delete Month', function () {
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to delete?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
                         deleteAllSchedules();
                     })
                 }, function () {
@@ -113,7 +110,7 @@
             var date = new Date(month);
             return [
                 ['Delete month', function () {
-                    $confirm({ text: 'Are you sure you want to delete?' }, { animation: true, size: 'sm' }).then(function () {
+                    $confirm({ title: 'Warning', text: 'Are you really sure you want to delete?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
                         //_timespan = TimeService.getJSONTimeSpan(date, TimeService.timeSpanType.MONTH);
                         deleteSchedule();
                     })
@@ -124,10 +121,9 @@
                             return true;
                     }
                     return false;
-                }],
-                null,
-                ['Delete All', function () {
-                    $confirm({ text: 'Are you sure you want to delete?' }, { animation: true, size: 'sm' }).then(function () {
+                }],                
+                ['Delete All Schedules', function () {
+                    $confirm({ title: 'Warning', text: 'Are you really sure you want to delete?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
                         deleteAllSchedules();
                     })
                 }, function () {
@@ -173,8 +169,8 @@
 
             var modalInstance = $uibModal.open({
                 animation: true,
-                template: '<div class="modal-header" style="border-bottom-width:0px;">\
-                             <h3 class="modal-title" style="text-align:center;">'
+                template: '<div class="modal-header">\
+                             <h3 class="modal-title">'
                              + day
                              + ', ' + dayNum
                              + ' ' + month

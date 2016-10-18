@@ -165,4 +165,8 @@
         //    }
         //}       
     });
+    
+    app.run(function($confirmModalDefaults) {
+		$confirmModalDefaults.templateUrl = 'templates/ConfirmModalTemplate.html';		
+	})
 })();

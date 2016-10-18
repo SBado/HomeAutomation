@@ -1,0 +1,8 @@
+<div class="modal-header">
+	<h3 class="modal-title">{{data.title}}</h3>
+</div> 
+<div class="modal-body">{{data.text}}</div> 
+<div class="modal-footer"> 
+    <button class="btn btn-primary btn-sm fade-background-color" ng-class="{'btn-warning': data.type == 'warning', 'btn-danger': data.type == 'danger'}" ng-click="ok()">{{data.ok}}</button> 
+    <button class="btn btn-default btn-sm fade-background-color" ng-click="cancel()">{{data.cancel}}</button> 
+ </div>

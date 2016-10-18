@@ -52,29 +52,25 @@
             vm.contextMenu = [
                 ['Copy', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.Temperature);
-                }],
-                null,
+                }],                
                 ['Copy To All', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.Temperature);
                     setTemperatureBulk($itemScope.value.Temperature);
-                }],
-                null,
+                }],                
                 ['Paste', function ($itemScope) {
                     $itemScope.value.Temperature = _clipboard.get().values[0];
                     //setTemperature($itemScope.value.Hour, _clipboard.get().values[0]);
                 }, function ($itemScope) {
                     return _clipboard.get().values.length == 1 && _clipboard.get().type === _clipboardType.HOUR;
                 }],
-                null,
                 ['Reset', function ($itemScope) {
                     $confirm({ text: 'Are you sure you want to reset ' + vm.selectedDay + ' at ' + $itemScope.value.Hour + '?' }, { animation: true, size: 'sm' }).then(function () {
                         $itemScope.value.Temperature = 2.0;
                         //setTemperature($itemScope.value.Hour, 2.0);
                     })
-                }],
-                null,
-                ['Reset All', function ($itemScope) {
-                    $confirm({ text: 'Are you sure you want to reset ' + vm.selectedDay + '?' }, { animation: true, size: 'sm' }).then(function () {
+                }],                
+                ['Reset Day', function ($itemScope) {
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + vm.selectedDay + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
                         setTemperatureBulk(2.0);
                     })
                 }]

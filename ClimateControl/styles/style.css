@@ -89,7 +89,7 @@
 }
 
 .button {
-    background-color: white;
+    background-color: #FAFAFA;
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
@@ -131,26 +131,6 @@
     outline: none !important;
 }
 
-.day-link {
-    color: black !important;
-    text-decoration: none !important;
-}
-
-    .day-link:visited {
-        color: black !important;
-        text-decoration: none !important;
-    }
-
-    .day-link:hover {
-        color: black !important;
-        text-decoration: none !important;
-    }
-
-    .day-link:active {
-        color: black !important;
-        text-decoration: none !important;
-    }
-
 #outer-circle {
     display: flex;
     justify-content: center;
@@ -190,6 +170,15 @@
     z-index: 5;
 }
 
+.overlay-modal {
+    background-color: rgb(250,250,250);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: 5;
+    border-radius: 6px;
+}
+
 .transparent-overlay {
     background-color: rgba(250,250,250, 0.5);
     width: 100%;
@@ -210,11 +199,20 @@
         vertical-align: middle;
         margin-right: -4px;
     }
-
+    
 .modal-dialog {
     display: inline-block;
     text-align: left;
     vertical-align: middle;
+}
+
+.modal-header, .modal-footer {
+	border-top-width: 0px;
+	border-bottom-width: 0px;
+}
+
+.modal-title {
+	text-align:center;
 }
 
 .error {
@@ -226,8 +224,8 @@
 } 
 
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 6px;
+    height: 6px;
 }
 
 ::-webkit-scrollbar-button {
@@ -236,31 +234,37 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border: 0px none #ffffff;
-    border-radius: 50px;
+/*    background: #c1c1c1;*/
+	background: #E6E6E6;
+    border: 0px none transparent;
+	/*border: 1px solid #ADADAD;*/
+    border-radius: 50px;	
 }
 
     ::-webkit-scrollbar-thumb:hover {
-        background: #a9a9a9;
+/*        background: #a9a9a9;*/
+        border: 1px solid #ADADAD;
     }
 
     ::-webkit-scrollbar-thumb:active {
-        background: #787878;
+/*        background: #787878;*/
+		border: 0px none transparent;
+		background: #C5CAE9;
     }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    /*background: #f1f1f1;*/
+    background: transparent;
     border: 0px none #ffffff;
     border-radius: 50px;
 }
 
     ::-webkit-scrollbar-track:hover {
-        background: #f1f1f1;
+        background: transparent;
     }
 
     ::-webkit-scrollbar-track:active {
-        background: #f1f1f1;
+        background: transparent;
     }
 
 ::-webkit-scrollbar-corner {
