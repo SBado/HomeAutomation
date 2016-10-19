@@ -50,31 +50,31 @@
             vm.hourContextMenu = [
                 ['Copy', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
-                }],                
+                }],                               
                 ['Copy To Day', function ($itemScope, $event, model) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
                     setSameTempForDay(model.day, $itemScope.value.temperature);
-                }],                
+                }],                                
                 ['Copy To All', function ($itemScope) {
                     _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
                     setSameTempForAll($itemScope.value.temperature);
-                }],                
+                }],                                
                 ['Paste', function ($itemScope, $event, model) {
                     //$itemScope.value.temperature = _clipboard.get().values[0];
                     setTempForHour(model.day, $itemScope.value.hour, _clipboard.get().values[0]);
                 }, function ($itemScope) {
                     return _clipboard.get().values.length == 1 && _clipboard.get().type === _clipboardType.HOUR;
-                }],
+                }],                
                 ['Reset', function ($itemScope, $event, model) {
                     $confirm({ text: 'Are you sure you want to reset ' + model.day + ' at ' + $itemScope.value.hour + '?' }, { animation: true, size: 'sm' }).then(function () {
                         setTempForHour(model.day, $itemScope.value.hour, 2.0);
                     })
-                }],                
+                }],                                
                 ['Reset Day', function ($itemScope, $event, model) {
                     $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + model.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
                         setSameTempForDay(model.day, 2.0);
                     })
-                }],                
+                }],                               
                 ['Reset All Days', function ($itemScope) {
                     $confirm({ title: 'Warning', text: 'Are you really sure you want to reset all days?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {                     
                         setSameTempForAll(2.0);
