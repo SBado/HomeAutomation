@@ -2,11 +2,11 @@
     "use strict";
 
     angular.module("climateControl")
-        .factory("SQLiteService", ['$http', '$resource', 'CacheFactory', 'TokenService', SQLiteService]);
+        .factory("ModelService", ['$http', '$resource', 'CacheFactory', 'TokenService', ModelService]);
 
-    function SQLiteService($http, $resource, CacheFactory, TokenService) {
+    function ModelService($http, $resource, CacheFactory, TokenService) {
 
-        console.log('SQLiteService instantiated');       
+        console.log('ModelService instantiated');       
 
         this.daily_temps = function () {
 

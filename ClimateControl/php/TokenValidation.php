@@ -23,8 +23,7 @@ function isTokenValid() {
     if (!$server->verifyResourceRequest(OAuth2\Request::createFromGlobals())) {                
         return false;
     }
-
-	error_log('AUTHORIZED');
+	
     return true;
 }
 

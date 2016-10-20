@@ -16,10 +16,10 @@
         };
     }
 
-    WeekSchedulerController.$inject = ['$rootScope', '$scope', '$uibModal', '$confirm', 'ClipboardService', 'SQLiteService', 'TimeService', 'temperatures'];
+    WeekSchedulerController.$inject = ['$rootScope', '$scope', '$uibModal', '$confirm', 'ClipboardService', 'ModelService', 'TimeService', 'temperatures'];
     WS_ModalInstanceController.$inject = ['$uibModalInstance', 'params'];
 
-    function WeekSchedulerController($rootScope, $scope, $uibModal, $confirm, ClipboardService, SQLiteService, TimeService, temperatures) {
+    function WeekSchedulerController($rootScope, $scope, $uibModal, $confirm, ClipboardService, ModelService, TimeService, temperatures) {
 
         var vm = this;
 
@@ -29,50 +29,53 @@
         var _days = TimeService.days;
         var _eventHandlers = [];
 
-        function init() {
-            vm.records = [];
-            for (var i = 0; i < _data.length; i += 24)
-                vm.records.push({ 'day': _data[i].Day, values: [] });
-
-            var j = 0;
+        function init() {            
+                    
+            vm.days = {};
+            for (var i = 0; i < _data.length; i += 24) {            	            	
+            	vm.days[_data[i].Day] = {};
+            }
             for (var i = 0; i < _data.length; i++) {
-                vm.records[j].values.push({ 'hour': _data[i].Hour, 'temperature': _data[i].Temperature });
-                if (i > 0 && i % 24 == 23)
-                    j++;
+            	vm.days[_data[i].Day][_data[i].Hour] = _data[i].Temperature;            	                
             }
 
             //TODO: query per valore di isBurning
             vm.isBurning = true;
             vm.today = TimeService.currentDay;
             vm.currentHour = TimeService.currentHour + ':00';            
-            vm.hours = TimeService.hours;            
+            vm.hours = TimeService.hours;                        
             vm.emptyContextMenu = [];
             vm.hourContextMenu = [
                 ['Copy', function ($itemScope) {
-                    _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
+                    _clipboard.set(_clipboardType.HOUR, $itemScope.temperature);
                 }],                               
                 ['Copy To Day', function ($itemScope, $event, model) {
-                    _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
-                    setSameTempForDay(model.day, $itemScope.value.temperature);
+                    _clipboard.set(_clipboardType.HOUR, $itemScope.temperature);
+                    setSameTempForDay(model, $itemScope.temperature);
+                }],
+                ['Copy To Hour', function ($itemScope, $event, model) {
+                    _clipboard.set(_clipboardType.HOUR, $itemScope.temperature);
+                    setSameTempForHour($itemScope.hour, $itemScope.temperature);
                 }],                                
-                ['Copy To All', function ($itemScope) {
-                    _clipboard.set(_clipboardType.HOUR, $itemScope.value.temperature);
-                    setSameTempForAll($itemScope.value.temperature);
+                ['Copy To All', function ($itemScope) {                                       
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to overwrite all of your schedules?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
+						_clipboard.set(_clipboardType.HOUR, $itemScope.temperature);                        
+                        setSameTempForAll($itemScope.temperature);
+                    })
                 }],                                
-                ['Paste', function ($itemScope, $event, model) {
-                    //$itemScope.value.temperature = _clipboard.get().values[0];
-                    setTempForHour(model.day, $itemScope.value.hour, _clipboard.get().values[0]);
+                ['Paste', function ($itemScope, $event, model) {                    
+                    setTempForDayAtHour(model, $itemScope.hour, _clipboard.get().values[0]);
                 }, function ($itemScope) {
                     return _clipboard.get().values.length == 1 && _clipboard.get().type === _clipboardType.HOUR;
                 }],                
                 ['Reset', function ($itemScope, $event, model) {
-                    $confirm({ text: 'Are you sure you want to reset ' + model.day + ' at ' + $itemScope.value.hour + '?' }, { animation: true, size: 'sm' }).then(function () {
-                        setTempForHour(model.day, $itemScope.value.hour, 2.0);
+                    $confirm({ text: 'Are you sure you want to reset ' + model + ' at ' + $itemScope.hour + '?' }, { animation: true, size: 'sm' }).then(function () {
+                        setTempForDayAtHour(model, $itemScope.hour, 2.0);
                     })
                 }],                                
                 ['Reset Day', function ($itemScope, $event, model) {
-                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + model.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
-                        setSameTempForDay(model.day, 2.0);
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + model + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
+                        setSameTempForDay(model, 2.0);
                     })
                 }],                               
                 ['Reset All Days', function ($itemScope) {
@@ -83,20 +86,22 @@
             ];
             vm.dayContextMenu = [
                 ['Copy Day', function ($itemScope) {
-                    _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.record.day));
+                    _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.day));
                 }],                
                 ['Copy Day To All', function ($itemScope) {
-                    _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.record.day));
-                    setDifferentTempsForAll(_clipboard.get().values);
+                	$confirm({ title: 'Warning', text: 'Are you sure you want to overwrite all of your schedules?', type: 'danger' }, { animation: true, size: 'sm' }).then(function () {
+	                    _clipboard.set(_clipboardType.DAY, getTemperatures($itemScope.day));
+	                    setDifferentTempsForAll(_clipboard.get().values);
+                    })
                 }],                
                 ['Paste Day', function ($itemScope) {
-                    setDifferentTempsForDay($itemScope.record.day, _clipboard.get().values);
+                    setDifferentTempsForDay($itemScope.day, _clipboard.get().values);
                 }, function () {
                     return _clipboard.get().values.length == 24 && _clipboard.get().type === _clipboardType.DAY;
                 }],
                 ['Reset Day', function ($itemScope) {
-                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + $itemScope.record.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
-                        setSameTempForDay($itemScope.record.day, 2.0);
+                    $confirm({ title: 'Warning', text: 'Are you sure you want to reset ' + $itemScope.day + '?', type: 'warning' }, { animation: true, size: 'sm' }).then(function () {
+                        setSameTempForDay($itemScope.day, 2.0);
                     })
                 }],                
                 ['Reset All Days', function ($itemScope) {
@@ -119,15 +124,10 @@
         }
         function getTemperatures(day) {
 
-            var temps = [];
-            for (var i = 0; i < vm.records.length; i++) {
-                if (vm.records[i].day === day) {
-                    for (var j = 0; j < vm.records[i].values.length; j++) {
-                        temps.push(vm.records[i].values[j].temperature);
-                    }
-                }
-            }
-
+            var temps = [];                      
+            Object.keys(vm.days[day]).forEach(function(hour) {
+            	temps.push(vm.days[day][hour]);
+           	});
             return temps;
         }
         function openModal(day, hour, temperature) {
@@ -161,13 +161,33 @@
             });
         }
         function saveSchedule(schedule) {
-            setTempForHour(schedule.day, schedule.hour, schedule.temperature);
+            setTempForDayAtHour(schedule.day, schedule.hour, schedule.temperature);
         }
-        function setTempForHour(day, hour, temperature) {
+        function setTempForDayAtHour(day, hour, temperature) {
 
-            SQLiteService.daily_temps().update({ day: day, hour: hour, temperature: temperature }, null, function (result) {
+            ModelService.daily_temps().update({ day: day, hour: hour, temperature: temperature }, null, function (result) {
                 //deleteCacheForHour(day, hour);
-                syncModelForHour(day, hour, temperature);
+                refreshHour(day, hour);
+            });
+        }
+        function setSameTempForHour(hour, temperature) {
+        	
+        	var json = {};
+            for (var i = 0; i < 7; i++)
+                json[_days[i]] = temperature;
+
+            ModelService.daily_temps().update({ hour: hour, temperature: JSON.stringify(json) }, null, function (result) {              
+                refreshHours(hour);
+            });
+        }
+        function setDifferentTempsForHour(hour, temperatures) {
+
+			var json = {};
+            for (var i = 0; i < 24; i++)
+                json[vm.hours[i]] = temperatures[i];
+
+            ModelService.daily_temps().update({ hour: hour, temperature: JSON.stringify(json) }, null, function (result) {                
+                refreshHours(hour);
             });
         }
         function setSameTempForDay(day, temperature) {
@@ -176,9 +196,8 @@
             for (var i = 0; i < 24; i++)
                 json[vm.hours[i]] = temperature;
 
-            SQLiteService.daily_temps().update({ day: day, temperature: JSON.stringify(json) }, null, function (result) {
-                //deleteCacheForDay(day);
-                syncModelSameTempForday(day, temperature);
+            ModelService.daily_temps().update({ day: day, temperature: JSON.stringify(json) }, null, function (result) {                
+                refreshDay(day);
             });
         }
         function setDifferentTempsForDay(day, temperatures) {
@@ -187,9 +206,8 @@
             for (var i = 0; i < 24; i++)
                 json[vm.hours[i]] = temperatures[i];
 
-            SQLiteService.daily_temps().update({ day: day, temperature: JSON.stringify(json) }, null, function (result) {
-                //deleteCacheForDay(day);
-                syncModelDifferentTempsForday(day, temperatures);
+            ModelService.daily_temps().update({ day: day, temperature: JSON.stringify(json) }, null, function (result) {                
+                refreshDay(day);
             });
         }
         function setSameTempForAll(temperature) {
@@ -198,9 +216,8 @@
             for (var i = 0; i < 24; i++)
                 json[vm.hours[i]] = temperature;
 
-            SQLiteService.daily_temps().update({ temperature: JSON.stringify(json) }, null, function (result) {
-                //deleteCache();
-                syncModelSameTemp(temperature);
+            ModelService.daily_temps().update({ temperature: JSON.stringify(json) }, null, function (result) {                
+                refreshAll();
             });
         }
         function setDifferentTempsForAll(temperatures) {
@@ -209,54 +226,35 @@
             for (var i = 0; i < 24; i++)
                 json[vm.hours[i]] = temperatures[i];
 
-            SQLiteService.daily_temps().update({ temperature: JSON.stringify(json) }, null, function (result) {
-                //deleteCache();
-                syncModelDifferentTemps(temperatures);
+            ModelService.daily_temps().update({ temperature: JSON.stringify(json) }, null, function (result) {                
+                refreshAll();
             });
         }
-        function syncModelForHour(day, hour, temperature) {
-            for (var i = 0; i < vm.records.length; i++) {
-                if (vm.records[i].day === day) {
-                    for (var j = 0; j < vm.records[i].values.length; j++) {
-                        if (vm.records[i].values[j].hour === hour) {
-                            vm.records[i].values[j].temperature = temperature;
-                            return;
-                        }
-                    }
-                }
-            }
-        }
-        function syncModelSameTempForday(day, temperature) {
-            for (var i = 0; i < vm.records.length; i++) {
-                if (vm.records[i].day === day) {
-                    for (var j = 0; j < vm.records[i].values.length; j++) {
-                        vm.records[i].values[j].temperature = temperature;
-                    }
-                }
-            }
-        }
-        function syncModelDifferentTempsForday(day, temperatures) {
-            for (var i = 0; i < vm.records.length; i++) {
-                if (vm.records[i].day === day) {
-                    for (var j = 0; j < vm.records[i].values.length; j++) {
-                        vm.records[i].values[j].temperature = temperatures[j];
-                    }
-                }
-            }
-        }
-        function syncModelSameTemp(temperature) {
-            for (var i = 0; i < vm.records.length; i++) {
-                for (var j = 0; j < vm.records[i].values.length; j++) {
-                    vm.records[i].values[j].temperature = temperature;
-                }
-            }
-        }
-        function syncModelDifferentTemps(temperatures) {
-            for (var i = 0; i < vm.records.length; i++) {
-                for (var j = 0; j < vm.records[i].values.length; j++) {
-                    vm.records[i].values[j].temperature = temperatures[j];
-                }
-            }
+        function refreshHour(day, hour) {                        
+            ModelService.daily_temps().get({ day: day, hour: hour }, null, function (result) {                
+                vm.days[day][hour] = result.data;
+            });                        
+        }    
+        function refreshHours(hour) {                        
+            ModelService.daily_temps().get({ hour: hour }, null, function (result) { 
+				result.data.forEach(function (element) {
+	        		vm.days[element.Day][hour] = element.Temperature; 
+	        	});              
+            });                        
+        }              
+		function refreshDay(day) {
+			ModelService.daily_temps().get({ day: day }, null, function (result) {  
+				result.data.forEach(function (element) {
+	        		vm.days[day][element.Hour] = element.Temperature;
+	        	});				
+            }); 
+		}                
+        function refreshAll() {
+        	ModelService.daily_temps().get({}, null, function (result) {                
+	            result.data.forEach(function (element) {
+	        		vm.days[element.Day][element.Hour] = element.Temperature;
+	            });
+            }); 
         }
         function currentHourStyle (day, hour) {
             var border = day == vm.today && hour == vm.currentHour ? (vm.isBurning ? '2px solid red' : '2px solid') : ''

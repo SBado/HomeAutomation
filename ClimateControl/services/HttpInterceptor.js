@@ -12,6 +12,7 @@
                 if (response.config.method === 'PUT' || response.config.method === 'POST' || response.config.method === 'DELETE') {
 
                     var url = response.config.url;
+                    url = url.slice(0, url.lastIndexOf('/'));
                     var params = '?';
                     for (var param in response.config.params) {
                         params = [params, param, '=', response.config.params[param], '&'].join('');
@@ -19,7 +20,7 @@
                     params = params.slice(0, -1);
 
                     while (url.lastIndexOf('/') != -1) {
-                        CacheFactory.get('defaultCache').remove([url, params].join(''));
+                        CacheFactory.get('defaultCache').remove([url, params].join('/'));
                         url = url.slice(0, url.lastIndexOf('/'));
                     }
 

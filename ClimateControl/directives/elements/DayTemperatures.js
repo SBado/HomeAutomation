@@ -19,9 +19,9 @@
         };
     }
 
-    DayTemperaturesController.$inject = ['$rootScope', '$scope', '$stateParams', '$attrs', '$timeout', '$interval', '$confirm', 'ClipboardService', 'SQLiteService', 'TimeService'];
+    DayTemperaturesController.$inject = ['$rootScope', '$scope', '$stateParams', '$attrs', '$timeout', '$interval', '$confirm', 'ClipboardService', 'ModelService', 'TimeService'];
 
-    function DayTemperaturesController($rootScope, $scope, $stateParams, $attrs, $timeout, $interval, $confirm, ClipboardService, SQLiteService, TimeService) {
+    function DayTemperaturesController($rootScope, $scope, $stateParams, $attrs, $timeout, $interval, $confirm, ClipboardService, ModelService, TimeService) {
 
         var vm = this;
 
@@ -93,14 +93,14 @@
             }, 500);
         }
         function setTemperature(hour, temperature) {            
-            SQLiteService.daily_temps().update({ day: vm.selectedDay, hour: hour, temperature: temperature });
+            ModelService.daily_temps().update({ day: vm.selectedDay, hour: hour, temperature: temperature });
         }
         function setTemperatureBulk(temperature) {
             var json = {};
             for (var i = 0; i < 24; i++)
                 json[_hours[i]] = temperature;
 
-            SQLiteService.daily_temps().update({ day: vm.selectedDay, temperature: JSON.stringify(json) }, null, function () {
+            ModelService.daily_temps().update({ day: vm.selectedDay, temperature: JSON.stringify(json) }, null, function () {
                 syncLocalModel(temperature);
             });
 

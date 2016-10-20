@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module("climateControl")
-        .factory("ScheduleService", ['TimeService', 'SQLiteService', ScheduleService]);
+        .factory("ScheduleService", ['TimeService', 'ModelService', ScheduleService]);
 
-    function ScheduleService(TimeService, SQLiteService) {
+    function ScheduleService(TimeService, ModelService) {
 
         console.log('ScheduleService instantiated');
 
@@ -21,7 +21,7 @@
         }
         function getMonthlySchedule() {
             var timespan = TimeService.getTodayJSONTimeSpan(TimeService.timeSpanType.DAY);
-            return SQLiteService.scheduled_temps().get({ timespan: JSON.stringify(timespan) }, null, getMonthlyScheduledTemp, function (error) { console.log(error); });
+            return ModelService.scheduled_temps().get({ timespan: JSON.stringify(timespan) }, null, getMonthlyScheduledTemp, function (error) { console.log(error); });
         }
         function getMonthlyScheduledTemp(schedule) {
             var temperatures = schedule.data;
@@ -32,14 +32,14 @@
             self.scheduledBoilerTemperature = 2;
         }
         function getDailySchedule() {
-            return SQLiteService.daily_temps().get({ day: TimeService.currentDay, hour: TimeService.currentHour + ':00' }, null, getDailyScheduledTemp, function (error) { console.log(error); });
+            return ModelService.daily_temps().get({ day: TimeService.currentDay, hour: TimeService.currentHour + ':00' }, null, getDailyScheduledTemp, function (error) { console.log(error); });
         }
         function getDailyScheduledTemp(schedule) {
             self.scheduledBoilerTemperature = schedule.data || 2;
         }
         function upateSchedule() {
             console.log('UPDATE SCHEDULE');
-            SQLiteService.scheduled_days().get({}, function (result) {
+            ModelService.scheduled_days().get({}, function (result) {
                 if (!result.data || result.data.length == 0) {
                     getDailySchedule();
                     return;

@@ -254,17 +254,17 @@
 
 ::-webkit-scrollbar-track {
     /*background: #f1f1f1;*/
-    background: transparent;
-    border: 0px none #ffffff;
+    background: #FAFAFA;
+    border: 0px none #FFFFFF;
     border-radius: 50px;
 }
 
     ::-webkit-scrollbar-track:hover {
-        background: transparent;
+        background: #FAFAFA;
     }
 
     ::-webkit-scrollbar-track:active {
-        background: transparent;
+        background: #FAFAFA;
     }
 
 ::-webkit-scrollbar-corner {

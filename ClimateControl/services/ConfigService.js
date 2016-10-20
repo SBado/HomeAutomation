@@ -2,26 +2,26 @@
     "use strict";
 
     angular.module('climateControl')
-        .factory('ConfigService', ['SQLiteService', ConfigService]);
+        .factory('ConfigService', ['ModelService', ConfigService]);
 
-    function ConfigService(SQLiteService) {
+    function ConfigService(ModelService) {
 
         console.log('ConfigService instantiated');
 
         var self = this;
 
         function getConfig(key) {
-            var promise = SQLiteService.configs().get({ key: key });
+            var promise = ModelService.configs().get({ key: key });
             return promise;
         }
         function createConfig(key, value) {
-            return SQLiteService.configs().save({ key: key, value: value });
+            return ModelService.configs().save({ key: key, value: value });
         }
         function updateConfig(key, value) {
-            return SQLiteService.configs().update({ key: key, value: value });
+            return ModelService.configs().update({ key: key, value: value });
         }
         function deleteConfig(key) {
-            return SQLiteService.configs().delete({ key: key });
+            return ModelService.configs().delete({ key: key });
         }
 
         this.getConfig = getConfig;

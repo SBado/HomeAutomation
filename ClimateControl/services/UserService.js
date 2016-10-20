@@ -2,9 +2,9 @@
     "use strict";
 
     angular.module('climateControl')
-        .factory('UserService', ['$window', 'SQLiteService', UserService]);
+        .factory('UserService', ['$window', 'ModelService', UserService]);
 
-    function UserService($window, SQLiteService) {
+    function UserService($window, ModelService) {
 
         console.log('UserService instantiated');
 
@@ -12,17 +12,17 @@
         var loggedUser = null;
 
         function validateUser(username, password) {
-            var promise = SQLiteService.users().get({ username: username, password: password });
+            var promise = ModelService.users().get({ username: username, password: password });
             return promise;
         }
         function createUser(username, password) {
-            return SQLiteService.users().save({ username: username, password: password });
+            return ModelService.users().save({ username: username, password: password });
         }
         function updateUser(username, password) {
-            return SQLiteService.users().update({ username: username, password: password });
+            return ModelService.users().update({ username: username, password: password });
         }
         function deleteUser(username) {
-            return SQLiteService.users().delete({ username: username });
+            return ModelService.users().delete({ username: username });
         }
         function getLoggedUser() {
             if (!loggedUser && $window.sessionStorage['loggedUser']) {

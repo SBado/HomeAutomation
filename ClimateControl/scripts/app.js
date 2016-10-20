@@ -74,7 +74,7 @@
                             day: null
                         },
                         resolve: {
-                            values: ['SQLiteService', '$stateParams', function (SQLiteService, $stateParams) {
+                            values: ['ModelService', '$stateParams', function (ModelService, $stateParams) {
                                 var day = '';
                                 if ($stateParams.day != null && $stateParams.day != '') {
                                     day = $stateParams.day;
@@ -84,7 +84,7 @@
                                     var days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
                                     day = days[now.getDay() - 1];
                                 }
-                                return SQLiteService.daily_temps().get({ day: day }).$promise;
+                                return ModelService.daily_temps().get({ day: day }).$promise;
                             }]
                         },
                         controller: function ($scope, values) {
@@ -101,8 +101,8 @@
                       controller: 'WeekSchedulerController',
                       controllerAs: 'vm',
                       resolve: {
-                          temperatures: function (SQLiteService) {
-                              return SQLiteService.daily_temps().get().$promise;
+                          temperatures: function (ModelService) {
+                              return ModelService.daily_temps().get().$promise;
                           }
                       }
                   }
@@ -116,8 +116,8 @@
                       controller: 'MonthSchedulerController',
                       controllerAs: 'vm',
                       resolve: {
-                          scheduledDays: function (SQLiteService) {
-                              return SQLiteService.scheduled_days().get().$promise;
+                          scheduledDays: function (ModelService) {
+                              return ModelService.scheduled_days().get().$promise;
                           }
                       }
                   }

@@ -16,10 +16,10 @@
         };
     }
 
-    MonthSchedulerController.$inject = ['$scope', '$uibModal', '$confirm', 'TimeService', 'ClipboardService', 'SQLiteService', 'scheduledDays'];
+    MonthSchedulerController.$inject = ['$scope', '$uibModal', '$confirm', 'TimeService', 'ClipboardService', 'ModelService', 'scheduledDays'];
     MS_ModalInstanceController.$inject = ['$scope', '$uibModalInstance', 'TimeService', 'date', 'values'];
 
-    function MonthSchedulerController($scope, $uibModal, $confirm, TimeService, ClipboardService, SQLiteService, scheduledDays) {
+    function MonthSchedulerController($scope, $uibModal, $confirm, TimeService, ClipboardService, ModelService, scheduledDays) {
 
         var vm = this;        
 
@@ -132,7 +132,7 @@
             ]
         }
         function getScheduledDays() {
-            SQLiteService.scheduled_days().get({}, refreshCalendar, function (error) { console.log(error); });
+            ModelService.scheduled_days().get({}, refreshCalendar, function (error) { console.log(error); });
         }
         function refreshCalendar(scheduledDays) {
             _scheduledDays = scheduledDays.data;
@@ -149,7 +149,7 @@
         }
         function getSchedule(date, success, error) {
             _timespan = TimeService.getJSONTimeSpan(date, TimeService.timeSpanType.DAY);
-            SQLiteService.scheduled_temps().get({ timespan: JSON.stringify(_timespan) }, null, success, error);
+            ModelService.scheduled_temps().get({ timespan: JSON.stringify(_timespan) }, null, success, error);
         }        
         function openModal(dataModel) {
 
@@ -200,16 +200,16 @@
 
         }
         function saveSchedule(temperatures) {
-            SQLiteService.scheduled_temps().save({ timespan: JSON.stringify(_timespan), temperatures: JSON.stringify({ 'Temperatures': temperatures }) }, null, function (result) {
+            ModelService.scheduled_temps().save({ timespan: JSON.stringify(_timespan), temperatures: JSON.stringify({ 'Temperatures': temperatures }) }, null, function (result) {
                 getScheduledDays();
             }, function (error) { console.log(error) });
 
         }
         function deleteSchedule() {
-            SQLiteService.scheduled_temps().delete({ timespan: JSON.stringify(_timespan) }, null, getScheduledDays);
+            ModelService.scheduled_temps().delete({ timespan: JSON.stringify(_timespan) }, null, getScheduledDays);
         }
         function deleteAllSchedules() {
-            SQLiteService.scheduled_temps().delete({}, null, getScheduledDays);
+            ModelService.scheduled_temps().delete({}, null, getScheduledDays);
         }
         function clean() {
             _watcher();

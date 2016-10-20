@@ -30,15 +30,13 @@ class DatabaseManager
     //private function __clone(){}
     //// [/Singleton]
 
-    public function __construct() {
-        //$this->db = new SQlite3('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+    public function __construct() {        
         $this->db = new SQlite3(DB_PATH, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);                 
         $this->init();            
     }
 
     public function open() {
-        try {
-            //$this->db->open('/srv/www/htdocs/ClimateControl/database/database.sqlite', SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
+        try {            
             $this->db->open(DB_PATH, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);  
             $this->db->busyTimeout(10000);          
         }
@@ -88,7 +86,9 @@ EOF;
     private function format_day($day) {        
         setlocale(LC_TIME, array('en_US.UTF-8','en_US','english'));
         $timestamp = strtotime('next ' . $day);
-        return ucwords(strftime('%A', $timestamp));
+        if ($timestamp != null)
+        	return ucwords(strftime('%A', $timestamp));
+        return null;
     }
 
     private function format_date($date) {
@@ -299,13 +299,18 @@ EOF;
     }
 
     function create_daily_temp($day, $hour, $temp) {
+    	
+    	$formattedDay =  $this->format_day($day);
+		if ($formattedDay == null)
+			return array('data' => null, 'error' => 'Wrong day format');
+    	
         $sql =<<<EOF
             INSERT INTO DailyTemps(Day, Hour, Temperature)
             VALUES(:day, :hour, :temp)
 EOF;
 
         $stmt = $this->db->prepare($sql); 
-        $stmt->bindValue(':day', $this->format_day($day));
+        $stmt->bindValue(':day', $formattedDay);
         $stmt->bindValue(':hour', $hour);
         $stmt->bindValue(':temp', $temp);
         $result = $stmt->execute();
@@ -316,30 +321,59 @@ EOF;
         return array('data' => null, 'error' => null);
     }
 
-    function read_daily_temps($day) {
+    function read_daily_temps($targetTime) {
+    	
+    	$sqlSelectTarget = "";	
+		$sqlConditionTarget = "";
+		$sqlConditionFilter = "";
+    	
+    	if (strrpos($targetTime, ':')) {
+			$sqlSelectTarget = "Day";	
+			$sqlConditionTarget = "Hour";
+			$sqlConditionFilter = $targetTime;
+		}
+		else {
+			$sqlSelectTarget = "Hour";	
+			$sqlConditionTarget = "Day";
+			$sqlConditionFilter	= $this->format_day($targetTime);
+		}
+				
+		$sql =<<<EOF
+            SELECT $sqlSelectTarget, Temperature FROM DailyTemps
+            WHERE $sqlConditionTarget LIKE :sqlConditionFilter
+EOF;
+		
+		/*$formattedDay =  $this->format_day($day);
+		if ($formattedDay == null)
+			return array('data' => null, 'error' => 'Wrong day format');
+    	
         $sql =<<<EOF
             SELECT Hour, Temperature FROM DailyTemps
             WHERE Day LIKE :day
-EOF;
+EOF;*/
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':day', $this->format_day($day));
+        $stmt->bindValue(':sqlConditionFilter', $sqlConditionFilter);
         $result = $stmt->execute();
         if (!$result)
             return array('data' => null, 'error' => 'Query read_daily_temps Failed');
-
-        //return $this->build_output_multiple_values($result, 'temperature');
+        
         return $this->build_output_multiple_rows($result);
     }
 
     function read_daily_temp($day, $hour) {
+    	
+		$formattedDay =  $this->format_day($day);
+		if ($formattedDay == null)
+			return array('data' => null, 'error' => 'Wrong day format');
+			
         $sql =<<<EOF
             SELECT Temperature FROM DailyTemps
             WHERE Day LIKE :day AND Hour LIKE :hour
 EOF;
 
         $stmt = $this->db->prepare($sql); 
-        $stmt->bindValue(':day', $this->format_day($day));
+        $stmt->bindValue(':day', $formattedDay);
         $stmt->bindValue(':hour', $hour);
         $result = $stmt->execute();
         if (!$result)
@@ -390,24 +424,40 @@ EOF;
         return array('data' => null, 'error' => null);
     }
 
-    function update_daily_temps($day, $json) {
+    function update_daily_temps($targetTime, $json) {
+    	
+    	$dict = json_decode($json, true);               
+        $sqlUpdateTarget = "";
+        $sqlUpdateValues = ""; 
+        $sqlConditionTarget = "";
+        $sqlConditionFilter = "";                       
 
-        $dict = json_decode($json, true);
-        $values = "";
-        foreach ($dict as $hour => $temperature) {
-            $values = $values . "('$hour', $temperature),";
-        };
-        $values = rtrim($values, ",") . '';
-
-        $sql =<<<EOF
-            WITH Record(Hour, Temperature) AS (VALUES $values)
+		if (strrpos($targetTime, ':') != FALSE) {
+			$sqlUpdateTarget = "Day";	
+			$sqlConditionTarget = "Hour";
+			$sqlConditionFilter = $targetTime;
+		}
+		else {
+			$sqlUpdateTarget = "Hour";	
+			$sqlConditionTarget = "Day";
+			$sqlConditionFilter	= $this->format_day($targetTime);
+		}
+					    	   		
+		foreach ($dict as $time => $temperature) {
+        	$sqlUpdateValues = $sqlUpdateValues . "('$time', $temperature),";
+	    };
+    	$sqlUpdateValues = rtrim($sqlUpdateValues, ",") . '';    	
+		
+    	$sql =<<<EOF
+            WITH Record($sqlUpdateTarget, Temperature) AS (VALUES $sqlUpdateValues)
             UPDATE DailyTemps
-            SET Temperature = (SELECT Temperature FROM Record WHERE Record.Hour = DailyTemps.Hour)
-            WHERE Day LIKE :day
+            SET Temperature = (SELECT Temperature FROM Record WHERE Record.$sqlUpdateTarget = DailyTemps.$sqlUpdateTarget)
+            WHERE $sqlConditionTarget LIKE :sqlConditionFilter
 EOF;
-
-        $stmt = $this->db->prepare($sql); 
-        $stmt->bindValue(':day', $this->format_day($day));
+		
+        $stmt = $this->db->prepare($sql);         
+        //$stmt->bindValue(':sqlUpdateValues', $sqlUpdateValues); DOESN'T SEEM TO WORK...
+        $stmt->bindValue(':sqlConditionFilter', $sqlConditionFilter);
         $result = $stmt->execute();
 
         if (!$result)
@@ -417,6 +467,11 @@ EOF;
     }
 
     function update_daily_temp($day, $hour, $temp) {
+    	
+    	$formattedDay =  $this->format_day($day);
+		if ($formattedDay == null)
+			return array('data' => null, 'error' => 'Wrong day format');
+			
         $sql =<<<EOF
             UPDATE DailyTemps
             SET Temperature = :temp
@@ -424,7 +479,7 @@ EOF;
 EOF;
 
         $stmt = $this->db->prepare($sql); 
-        $stmt->bindValue(':day', $this->format_day($day));
+        $stmt->bindValue(':day', $formattedDay);
         $stmt->bindValue(':hour', $hour);
         $stmt->bindValue(':temp', $temp);
         $result = $stmt->execute();
