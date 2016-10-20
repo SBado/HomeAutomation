@@ -127,7 +127,7 @@
         }
         function customSliderStyle(hour, temperature) {
             if ($attrs.customSliderStyle) {
-                $scope.customSliderStyle();
+                $scope.customSliderStyle({Hour: hour, Temperature: temperature});
                 return;
             }
             var color = vm.currentHour == hour && vm.selectedDay == vm.today ? (vm.isBurning ? 'rgb(229, 115, 115)' : 'rgb(230,230,230)') : '#FAFAFA';
