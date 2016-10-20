@@ -13,6 +13,7 @@
             controllerAs: 'vm',
             scope: {
                 values: '=',
+                hours: '=',
                 saveOnClose: '@',
                 customSliderStyle: '&'
             }
@@ -31,12 +32,19 @@
         var _promises = {};
         var _eventHandlers = [];
 
-        function init() {            
+        function init() { 
+        	var values = null;
+			vm.values = {};        	
+        	         
             if ($scope.values)
-                vm.values = $scope.values;
+                values = $scope.values.data;
             else if ($scope.$parent.values)
-                vm.values = $scope.$parent.values.data;
-
+                values = $scope.$parent.values.data;
+                                      
+            values.forEach(function (element) {
+	        	vm.values[element.Hour] = element.Temperature;
+	        });
+            
             vm.days = TimeService.days;
             vm.today = TimeService.currentDay;
             vm.selectedDay = $stateParams.day || vm.today;
@@ -51,11 +59,11 @@
 
             vm.contextMenu = [
                 ['Copy', function ($itemScope) {
-                    _clipboard.set(_clipboardType.HOUR, $itemScope.value.Temperature);
+                    _clipboard.set(_clipboardType.HOUR, $itemScope.temperature);
                 }],                
                 ['Copy To All', function ($itemScope) {
-                    _clipboard.set(_clipboardType.HOUR, $itemScope.value.Temperature);
-                    setTemperatureBulk($itemScope.value.Temperature);
+                    _clipboard.set(_clipboardType.HOUR, $itemScope.temperature);
+                    setTemperatureBulk($itemScope.temperature);
                 }],                
                 ['Paste', function ($itemScope) {
                     $itemScope.value.Temperature = _clipboard.get().values[0];
@@ -85,6 +93,13 @@
                     vm.values[i].Temperature = temperatures;
             }
         }
+        function refresh() {
+        	ModelService.daily_temps().get({ day: vm.selectedDay }, null, function(result) {
+                result.data.forEach(function (element) {
+	        		vm.values[element.Hour] = element.Temperature;
+	        	});
+            });
+        }
         function updateValue(event, data) {
             $timeout.cancel(_promises[data.id]);
             _promises[data.id] = $timeout(function () {
@@ -101,7 +116,7 @@
                 json[_hours[i]] = temperature;
 
             ModelService.daily_temps().update({ day: vm.selectedDay, temperature: JSON.stringify(json) }, null, function () {
-                syncLocalModel(temperature);
+                refresh();
             });
 
         }       
@@ -110,12 +125,12 @@
             vm.currentHour = TimeService.currentHour + ':00';
             //TODO: CONTROLLO SE LA CALDAIA È AVVIATA: isBurning = ...
         }
-        function customSliderStyle (value) {
+        function customSliderStyle(hour, temperature) {
             if ($attrs.customSliderStyle) {
-                $scope.customSliderStyle(value);
+                $scope.customSliderStyle();
                 return;
             }
-            var color = vm.currentHour == value.Hour && vm.selectedDay == vm.today ? (vm.isBurning ? 'rgb(229, 115, 115)' : 'rgb(230,230,230)') : '#FAFAFA';
+            var color = vm.currentHour == hour && vm.selectedDay == vm.today ? (vm.isBurning ? 'rgb(229, 115, 115)' : 'rgb(230,230,230)') : '#FAFAFA';
             return { 'background-color': color };
         }
         function clean() {

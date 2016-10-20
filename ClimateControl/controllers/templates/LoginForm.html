@@ -2,8 +2,8 @@
 <div>
 <div class="overlay-modal flexbox-column" ng-show="vm.loading">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        <p class="info animate-if" ng-if="vm.signing" style="margin-top:10px;">Signing Up...</p>
-        <p class="info animate-if" ng-if="vm.logging" style="margin-top:10px;">Logging In...</p>
+        <p class="info animate-if" ng-if="vm.signing">Signing Up...</p>
+        <p class="info animate-if" ng-if="vm.logging">Logging In...</p>
 </div>
 <div class="modal-header">
     <h3 class="modal-title">{{vm.signupMode && 'Sign up' || 'Login'}}</h3>
@@ -23,7 +23,7 @@
                 'Username' is mandatory
             </p>
         </div>
-        <div style="margin-top: 25px" class="input-group">
+        <div class="input-group password-input-group">
             <span class="input-group-addon">
                 <i class="material-icons" style="font-size: 18px;">lock</i>
             </span>
@@ -38,7 +38,7 @@
             </p>
         </div>
         <div id="signup" ng-if="vm.signupMode" class="animate-if">
-            <div style="margin-top: 25px" class="input-group">
+            <div class="input-group password-input-group">
                 <span class="input-group-addon">
                     <i class="material-icons" style="font-size: 18px;">lock</i>
                 </span>

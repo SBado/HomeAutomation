@@ -1,15 +1,15 @@
 ﻿<table class="table day-table">
     <tbody>
         <tr>
-            <td ng-repeat="value in vm.values" context-menu="::vm.contextMenu"
-                ng-style="vm.customSliderStyle(value)">
+            <td ng-repeat="(hour, temperature) in vm.values" context-menu="::vm.contextMenu"
+                ng-style="vm.customSliderStyle(hour, temperature)">
                 <div style="background-color: rgb(245,245,245); border-style: solid; border-width: 1px; border-radius: 6px; border-color: #ddd;">
-                    <slider id="{{value.Hour}}"
+                    <slider id="{{hour}}"
                             min="2"
                             max="35"
                             step="0.1"
                             uom="°"
-                            selected-value="value.Temperature"
+                            selected-value="temperature"
                             style="display:table-cell;"
                             context-menu="::vm.contextMenu">
                     </slider>

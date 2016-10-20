@@ -31,13 +31,19 @@
 
         function init() {            
                     
-            vm.days = {};
-            for (var i = 0; i < _data.length; i += 24) {            	            	
-            	vm.days[_data[i].Day] = {};
+            vm.values = {};
+            /*for (var i = 0; i < _data.length; i += 24) {            	            	
+            	vm.values[_data[i].Day] = {};
             }
             for (var i = 0; i < _data.length; i++) {
-            	vm.days[_data[i].Day][_data[i].Hour] = _data[i].Temperature;            	                
-            }
+            	vm.values[_data[i].Day][_data[i].Hour] = _data[i].Temperature;            	                
+            }*/
+            
+            _data.forEach(function (element) {
+	        	if (!vm.values[element.Day])
+	        		vm.values[element.Day] = {};
+	        	vm.values[element.Day][element.Hour] = element.Temperature;
+	        });
 
             //TODO: query per valore di isBurning
             vm.isBurning = true;
@@ -125,8 +131,8 @@
         function getTemperatures(day) {
 
             var temps = [];                      
-            Object.keys(vm.days[day]).forEach(function(hour) {
-            	temps.push(vm.days[day][hour]);
+            Object.keys(vm.values[day]).forEach(function(hour) {
+            	temps.push(vm.values[day][hour]);
            	});
             return temps;
         }
@@ -232,27 +238,27 @@
         }
         function refreshHour(day, hour) {                        
             ModelService.daily_temps().get({ day: day, hour: hour }, null, function (result) {                
-                vm.days[day][hour] = result.data;
+                vm.values[day][hour] = result.data;
             });                        
         }    
         function refreshHours(hour) {                        
             ModelService.daily_temps().get({ hour: hour }, null, function (result) { 
 				result.data.forEach(function (element) {
-	        		vm.days[element.Day][hour] = element.Temperature; 
+	        		vm.values[element.Day][hour] = element.Temperature; 
 	        	});              
             });                        
         }              
 		function refreshDay(day) {
 			ModelService.daily_temps().get({ day: day }, null, function (result) {  
 				result.data.forEach(function (element) {
-	        		vm.days[day][element.Hour] = element.Temperature;
+	        		vm.values[day][element.Hour] = element.Temperature;
 	        	});				
             }); 
 		}                
         function refreshAll() {
         	ModelService.daily_temps().get({}, null, function (result) {                
 	            result.data.forEach(function (element) {
-	        		vm.days[element.Day][element.Hour] = element.Temperature;
+	        		vm.values[element.Day][element.Hour] = element.Temperature;
 	            });
             }); 
         }

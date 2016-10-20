@@ -25,7 +25,7 @@
                 var modalInstance = $uibModal.open({
                     templateUrl: 'controllers/templates/LoginForm.html',
                     controller: 'LoginController as vm',
-                    backdrop: 'static'
+                    backdrop: false
                 });
 
                 modalInstance.result.then(function () {

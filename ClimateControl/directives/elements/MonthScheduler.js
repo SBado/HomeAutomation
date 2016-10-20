@@ -153,15 +153,17 @@
         }        
         function openModal(dataModel) {
 
-            //var temperatures = {};
+			//var values = {};
+			//values.data = [];
             var temperatures = [];
-            var date = vm.dt;
-            date.setHours(0, 0, 0, 0);
-          
+            
             for (var i = 0; i < 24; i++) {
                 temperatures[i] = dataModel.data[i] || 2.0;
-            }
-
+                //values.data[i] = { Hour: i + ':00', Temperature: dataModel.data[i] || 2.0 }
+            }      
+            
+            var date = vm.dt;
+            date.setHours(0, 0, 0, 0);                                       
             var day = _days[(date.getDay() - 1) > 0 ? (date.getDay() - 1) % 7 : 6];
             var dayNum = date.getDate();
             var month = _months[date.getMonth()];
@@ -229,10 +231,11 @@
             vm.onOk = submit;
             vm.onCancel = cancel;
 
-            vm.values = [];
+            vm.values = {};
+            vm.values.data = [];
             vm.hours = TimeService.hours;
             for (var i = 0; i < 24; i++) {
-                vm.values.push({ Temperature: values[i], Hour: vm.hours[i] });
+                vm.values.data[i] = { Temperature: values[i], Hour: vm.hours[i] };
             }
         }
         function buildResult() {

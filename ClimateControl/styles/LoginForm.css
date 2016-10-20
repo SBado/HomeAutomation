@@ -1,0 +1,15 @@
+.error {
+    color: #FF9494;
+}
+
+.info {
+	color: #106CC8;
+}
+
+.error, .color {
+	margin-top:10px;
+}
+
+.password-input-group {
+	margin-top: 25px
+}

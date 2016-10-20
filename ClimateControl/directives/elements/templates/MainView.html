@@ -9,6 +9,7 @@
         <span>{{vm.pageTitle || 'Climate Control'}}</span>
         <span flex=""></span>
         <span>{{loggedUser.name}}</span>
+        <i class="material-icons" ng-show="!loggedUser.name">wb_sunny</i>
     </h2>
 </md-toolbar>
 <md-sidenav class="md-sidenav-left" md-component-id="left">
@@ -57,11 +58,11 @@
             </md-list-item>
         </md-list>
     </md-content>
-</md-sidenav>
-<!---->  
+</md-sidenav> 
 <md-content class="md-whiteframe-8dp" style="margin-left:5%; margin-right:5%; margin-top:2%;" ng-show="userAuthenticated()">
     <div class="overlay flexbox-row" ng-show="loadingView">
         <md-progress-circular md-mode="indeterminate"></md-progress-circular>
     </div>
     <md-content ui-view="schedulers"></md-content>
 </md-content>
+

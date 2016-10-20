@@ -2,7 +2,7 @@
 <div id="week-scheduler">
 	    <table id="days" class="table">
 	        <tbody>
-	            <tr ng-repeat="(day, hours) in vm.days" context-menu="::vm.emptyContextMenu">
+	            <tr ng-repeat="(day, hours) in vm.values" context-menu="::vm.emptyContextMenu">
 	                <td class="day-column" context-menu="::vm.dayContextMenu">
 	                    <label class="day-label">
 	                        <a class="day-link fade-color" href="#/home/dayscheduler/{{::day}}">{{::day}}</a>
@@ -14,7 +14,7 @@
     <div id="temperatures" class="table-responsive">
         <table class="table">
             <tbody>
-                <tr ng-repeat="(day, hours) in vm.days" context-menu="::vm.emptyContextMenu">                   
+                <tr ng-repeat="(day, hours) in vm.values" context-menu="::vm.emptyContextMenu">                   
                     <td ng-repeat="(hour, temperature) in hours">
                         <button type="button" class="btn btn-default circular-button fade-background-color flexbox-row"
                                 ng-click="vm.onClick(day, hour, temperature)"
