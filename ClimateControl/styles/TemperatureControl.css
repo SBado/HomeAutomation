@@ -9,7 +9,7 @@
     -moz-transition: background 100ms linear;
     -webkit-transition: background 100ms linear;
     transition: background 100ms linear;
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 .temperature-control-button:active {
@@ -40,8 +40,7 @@
     height: 25%;
     border-width: 0;
     /*padding: 10% 0 0 0;*/
-    border-style: hidden;
-    cursor: pointer;
+    border-style: hidden;    
     outline: none !important;
     pointer-events: auto;
 }
@@ -74,8 +73,7 @@
     left: 0;
     border-width: 0;
     padding: 0;
-    border-style: hidden;
-    cursor: pointer;
+    border-style: hidden;    
     outline: none !important;
     pointer-events: auto;
 }
