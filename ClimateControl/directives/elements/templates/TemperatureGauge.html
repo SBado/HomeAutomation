@@ -1,4 +1,4 @@
-﻿<div id="temperature-gauge" class="flexbox-column" ng-click="vm.manualMode && parentClick($event)">
+﻿<div id="temperature-gauge" class="flexbox-column" ng-click="vm.manualMode && parentClick($event)" ng-style="{'cursor': vm.manualMode && 'pointer' || 'default'}">
     <div id="boiler-temperature-arm" ng-click="$event.stopPropagation()" style="transition: -webkit-transform 1000ms ease; -webkit-transform: rotate({{calculateDegrees(vm.boilerTemperature.value)}}deg);"></div>
     <div id="room-temperature-arm" ng-click="$event.stopPropagation()" style="transition: -webkit-transform 1000ms ease; -webkit-transform: rotate({{calculateDegrees(vm.roomTemperature)}}deg);"></div>
     <ng-transclude id="temperature-ctrl" ng-click="vm.manualMode && childClick($event); $event.stopPropagation()"></ng-transclude>

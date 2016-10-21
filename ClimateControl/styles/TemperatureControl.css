@@ -12,7 +12,14 @@
     pointer-events: none; 
 }
 
-
+.temperature-control-button:active {
+	-o-transition: all 100ms linear;
+	-moz-transition: all 100ms linear;
+	-webkit-transition: all 100ms linear;
+  	transition: all 100ms linear;        
+/*	transform: translateY(3px);*/
+	transform: scale(0.85, 0.85);
+}
 
 #increase-temp-button {
     -webkit-border-radius: 50% 50% 0 0/ 100% 100% 0 0;
@@ -39,13 +46,14 @@
     pointer-events: auto;
 }
 
-	#increase-temp-button:hover {		
-		background: radial-gradient(circle, transparent 15%, #E57373 19%, transparent 28%) !important
+/*	#increase-temp-button:hover {		
+		background: radial-gradient(circle, transparent 12.5%, #E57373 17.5%, transparent 22.5%) !important
+		
 	}
 	
 	#decrease-temp-button:hover {		
-		background: radial-gradient(circle, transparent 15%, #C5CAE9 19%, transparent 28%) !important
-	}
+		background: radial-gradient(circle, transparent 15%, #C5CAE9 17.5%, transparent 22.5%) !important
+	}*/
 
 #auto-button {
     -webkit-border-top-left-radius: 45%;
@@ -72,9 +80,9 @@
     pointer-events: auto;
 }
 
-.not-selected:hover {
-    background: radial-gradient(circle, transparent 20%, rgb(197,202,233) 25%, transparent 35%) !important
-}
+/*.not-selected:hover {
+    background: radial-gradient(circle, transparent 20%, #C5CAE9 25%, transparent 35%) !important
+}*/
 
 #temperature-readings {
     width:50%;

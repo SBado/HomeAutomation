@@ -1,5 +1,5 @@
 ﻿<div id="temperature-control" class="flexbox-column" ng-style="{'background': background}">
-    <div class="animate-show flexbox-row" id="increase-temp-button" style="pointer-events: auto;"
+    <div class="animate-show flexbox-row temperature-control-button" id="increase-temp-button" style="pointer-events: auto;"
          long-press
          delay="{{delay}}"
          ng-show="vm.manualMode"
@@ -13,7 +13,7 @@
         +
     </div>
     <div class="flexbox-row" style="width:100%; height:50%;">
-        <div id="auto-button" class="flexbox-row"
+        <div id="auto-button" class="flexbox-row temperature-control-button"
              ng-mousedown="onMouseDown('auto-button')"
              ng-mouseup="onMouseUp()"
              ng-mouseleave="onMouseLeave()"
@@ -39,7 +39,7 @@
                 </label>
             </div>
         </div>
-        <div id="manual-button" class="flexbox-row"
+        <div id="manual-button" class="flexbox-row temperature-control-button"
              ng-mousedown="onMouseDown('manual-button')"
              ng-mouseup="onMouseUp()"
              ng-mouseleave="onMouseLeave()"
@@ -50,7 +50,7 @@
         </div>
         <!--</div>-->
     </div>
-    <div class="animate-show flexbox-row" id="decrease-temp-button"
+    <div class="animate-show flexbox-row temperature-control-button" id="decrease-temp-button"
          long-press
          delay="{{delay}}"
          ng-show="vm.manualMode"

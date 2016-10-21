@@ -148,7 +148,7 @@
                              </div>\
                            </div>\
                            <div class="modal-footer">\
-                             <button type="button" class="btn btn-default btn-sm fade-background-color" ng-click="vm.onOk()">OK</button>\
+                             <button type="button" class="btn btn-primary btn-sm fade-background-color" ng-click="vm.onOk()">OK</button>\
                              <button type="button" class="btn btn-default btn-sm fade-background-color" ng-click="vm.onCancel()">Cancel</button>\
                            </div>',
                 controller: 'WS_ModalInstanceController as vm',

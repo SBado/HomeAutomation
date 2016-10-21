@@ -1,15 +1,22 @@
-body {
-	background-color: #E6E6E6;
+
+* {
+	cursor: default;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	 user-select: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+   -webkit-tap-highlight-color: transparent;
 }
 
-﻿.noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Chrome/Safari/Opera */
-    -khtml-user-select: none; /* Konqueror */
-    -moz-user-select: none; /* Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version, currently
-                                  not supported by any browser */
+button *, a, input {
+	cursor: auto;
+}
+
+body {
+	background-color: #E6E6E6;
 }
 
 .flexbox-row {
