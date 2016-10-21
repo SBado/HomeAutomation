@@ -26,16 +26,16 @@
         function getMonthlyScheduledTemp(schedule) {
             var temperatures = schedule.data;
             if (temperatures.length > 0) {
-                self.scheduledBoilerTemperature = temperatures[TimeService.currentHour];
+                self.scheduledBoilerTemperature.value = temperatures[TimeService.currentHour];
                 return;
             }
-            self.scheduledBoilerTemperature = 2;
+            self.scheduledBoilerTemperature.value = 2;
         }
         function getDailySchedule() {
             return ModelService.daily_temps().get({ day: TimeService.currentDay, hour: TimeService.currentHour + ':00' }, null, getDailyScheduledTemp, function (error) { console.log(error); });
         }
         function getDailyScheduledTemp(schedule) {
-            self.scheduledBoilerTemperature = schedule.data || 2;
+            self.scheduledBoilerTemperature.value = schedule.data || 2;
         }
         function upateSchedule() {
             console.log('UPDATE SCHEDULE');
@@ -58,7 +58,7 @@
             }, function (error) { console.log(error); });
         }       
 
-        self.scheduledBoilerTemperature = 2;
+        self.scheduledBoilerTemperature = { value: 2 };
 
         self.upateSchedule = upateSchedule;        
 

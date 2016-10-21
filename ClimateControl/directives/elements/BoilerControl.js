@@ -27,7 +27,7 @@
             vm.maxTemp = TemperatureService.maxTemp;
             vm.roomTemperature = roomTemperature;
             vm.manualTemperature = { value: parseFloat(manualBoilerTemperature.data) };
-            vm.scheduledTemperature = { value: ScheduleService.scheduledBoilerTemperature };
+            vm.scheduledTemperature = ScheduleService.scheduledBoilerTemperature;
             vm.manualMode = parseInt(manualMode.data);
             vm.boilerTemperature = vm.manualMode == 1 ? vm.manualTemperature : vm.scheduledTemperature;
 
@@ -65,9 +65,9 @@
             if (vm.manualMode == 1)
                 vm.boilerTemperature = vm.manualTemperature;
             else {
-                ScheduleService.upateSchedule().$promise.then(function() {
-                	vm.boilerTemperature = { value: ScheduleService.scheduledBoilerTemperature };
-                });
+                ScheduleService.upateSchedule();
+                vm.boilerTemperature = ScheduleService.scheduledBoilerTemperature;
+                
             }
             ConfigService.updateConfig('manualMode', vm.manualMode);
         }
