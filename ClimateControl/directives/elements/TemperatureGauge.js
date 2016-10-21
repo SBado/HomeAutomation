@@ -16,7 +16,7 @@
                 calculateDegrees: '&'
             },
             bindToController: {
-                manualMode: '@',
+                manualMode: '=',
                 boilerTemperature: '=',
                 roomTemperature: '=',
                 minTemp: '=',
