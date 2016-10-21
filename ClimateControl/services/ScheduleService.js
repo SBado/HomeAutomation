@@ -39,10 +39,10 @@
         }
         function upateSchedule() {
             console.log('UPDATE SCHEDULE');
-            ModelService.scheduled_days().get({}, function (result) {
+            return ModelService.scheduled_days().get({}, function (result) {
                 if (!result.data || result.data.length == 0) {
-                    getDailySchedule();
-                    return;
+                    return getDailySchedule();
+                    //return;
                 }
                 var now = new Date();
                 now.setHours(0, 0, 0, 0);
@@ -50,11 +50,11 @@
                 now = now.toISOString();
                 for (var i = 0; i < 24; i++) {
                     if (result.data[i] === now) {
-                        getMonthlySchedule();
-                        return;
+                        return getMonthlySchedule();
+                        //return;
                     }
                 }
-                getDailySchedule();
+                return getDailySchedule();
             }, function (error) { console.log(error); });
         }       
 

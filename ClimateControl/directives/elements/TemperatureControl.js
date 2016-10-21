@@ -99,7 +99,7 @@
 
         function init() {
             vm.humidity = TemperatureService.humidity;
-            vm.manualMode = parseInt(vm.manualMode);
+            //vm.manualMode = parseInt(vm.manualMode);
             vm.isBurning = false;
 
             vm.increaseTemperature = increaseTemperature;

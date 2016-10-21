@@ -28,7 +28,7 @@
             vm.roomTemperature = roomTemperature;
             vm.manualTemperature = { value: parseFloat(manualBoilerTemperature.data) };
             vm.scheduledTemperature = { value: ScheduleService.scheduledBoilerTemperature };
-            vm.manualMode = manualMode.data;
+            vm.manualMode = parseInt(manualMode.data);
             vm.boilerTemperature = vm.manualMode == 1 ? vm.manualTemperature : vm.scheduledTemperature;
 
             _watches.push($scope.$watch(getBoilerTemperature, resetTimeout, true));
@@ -65,8 +65,9 @@
             if (vm.manualMode == 1)
                 vm.boilerTemperature = vm.manualTemperature;
             else {
-                ScheduleService.upateSchedule();
-                vm.boilerTemperature = { value: ScheduleService.scheduledBoilerTemperature };
+                ScheduleService.upateSchedule().$promise.then(function() {
+                	vm.boilerTemperature = { value: ScheduleService.scheduledBoilerTemperature };
+                });
             }
             ConfigService.updateConfig('manualMode', vm.manualMode);
         }
