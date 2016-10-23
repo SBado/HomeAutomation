@@ -7,29 +7,7 @@ class DatabaseManager
     private $db = null;
     private $errmsg = null;
     private $error = array('errnum' => null, 'errmsg' => null);
-    
-    //// [Singleton]
-    //private static $instance = null;
-
-    //public static function getInstance()
-    //{
-    //    error_log('INSTANCE:');
-    //    error_log(print_r(self::$instance, true));
-    //    if (!self::$instance)
-    //    {
-    //        error_log('NO ISTANCE FOUND!');
-    //        self::$instance = new self;
-    //        error_log(print_r(self::$instance, true));
-    //        error_log('INSTANCE CREATED!');
-    //        self::$instance->init();
-    //    }
         
-    //    return self::$instance;
-    //}
-
-    //private function __clone(){}
-    //// [/Singleton]
-
     public function __construct() {        
         $this->db = new SQlite3(DB_PATH, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);                 
         $this->init();            
@@ -164,9 +142,7 @@ EOF;
             Hour        TEXT     NOT NULL,
             Temperature        REAL    NOT NULL,
             PRIMARY KEY(Day, Hour))
-EOF;
-
-        //$this->db->exec($sql) or die("ERROR " + $this->db->lastErrorCode() + ": " + $this->db->lastErrorMsg()) ;
+EOF;        
 
         try {
             $this->db->exec($sql);
@@ -190,9 +166,7 @@ EOF;
             Temperature        REAL        NOT NULL,
             PRIMARY KEY(Date))
 EOF;
-
-        //$this->db->exec($sql) or die("ERROR " + $this->db->lastErrorCode() + ": " + $this->db->lastErrorMsg()) ;        
-
+                
         try {
             $this->db->exec($sql);
         }
@@ -208,9 +182,7 @@ EOF;
             Key         TEXT    NOT NULL,
             Value       TEXT    NOT NULL,     
             PRIMARY KEY(Key))
-EOF;
-
-        //$this->db->exec($sql) or die("ERROR " + $this->db->lastErrorCode() + ": " + $this->db->lastErrorMsg());   
+EOF;           
 
         try {
             $this->db->exec($sql);
@@ -325,35 +297,26 @@ EOF;
     	
     	$sqlSelectTarget = "";	
 		$sqlConditionTarget = "";
-		$sqlConditionFilter = "";
+		$sqlConditionValue = "";
     	
     	if (strrpos($targetTime, ':')) {
 			$sqlSelectTarget = "Day";	
 			$sqlConditionTarget = "Hour";
-			$sqlConditionFilter = $targetTime;
+			$sqlConditionValue = $targetTime;
 		}
 		else {
 			$sqlSelectTarget = "Hour";	
 			$sqlConditionTarget = "Day";
-			$sqlConditionFilter	= $this->format_day($targetTime);
+			$sqlConditionValue	= $this->format_day($targetTime);
 		}
 				
 		$sql =<<<EOF
             SELECT $sqlSelectTarget, Temperature FROM DailyTemps
-            WHERE $sqlConditionTarget LIKE :sqlConditionFilter
-EOF;
-		
-		/*$formattedDay =  $this->format_day($day);
-		if ($formattedDay == null)
-			return array('data' => null, 'error' => 'Wrong day format');
-    	
-        $sql =<<<EOF
-            SELECT Hour, Temperature FROM DailyTemps
-            WHERE Day LIKE :day
-EOF;*/
+            WHERE $sqlConditionTarget LIKE :sqlConditionValue
+EOF;				
 
         $stmt = $this->db->prepare($sql);
-        $stmt->bindValue(':sqlConditionFilter', $sqlConditionFilter);
+        $stmt->bindValue(':sqlConditionValue', $sqlConditionValue);
         $result = $stmt->execute();
         if (!$result)
             return array('data' => null, 'error' => 'Query read_daily_temps Failed');
@@ -380,27 +343,34 @@ EOF;
             return array('data' => null, 'error' => 'Query read_daily_temp Failed');
 
         return $this->build_output_single_value($result, 'Temperature');       
-    }
-    
-//    function update_daily_temps_($day, $temp) {
-//        $sql =<<<EOF
-//            UPDATE daily_temps
-//            SET temperature = :temp
-//            WHERE day LIKE :day
-//EOF;
+    }    
 
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':day', $this->format_day($day));
-//        $stmt->bindValue(':temp', $temp);
-//        $result = $stmt->execute();
+/////////// 'WITH'' SYNTAX NON AVAILABLE UNTIL 3.8.3 //////////////////
+//     function update_all_daily_temps($json) {
 
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query update_daily_temps Failed');
+//         $dict = json_decode($json, true);
+//         $values = "";
+//         foreach ($dict as $hour => $temperature) {
+//             $values = $values . "('$hour', $temperature),";
+//         };
+//         $values = rtrim($values, ",") . '';
 
-//        return array('data' => null, 'error' => null);
-//    }
+//         $sql =<<<EOF
+//             WITH Record(Hour, Temperature) AS (VALUES $values)
+//             UPDATE DailyTemps
+//             SET Temperature = (SELECT Temperature FROM Record WHERE Record.Hour = DailyTemps.Hour)
+// EOF;
 
-    function update_all_daily_temps($json) {
+//         $stmt = $this->db->prepare($sql); 
+//         $result = $stmt->execute();
+
+//         if (!$result)
+//             return array('data' => null, 'error' => 'Query update_all_daily_temps Failed');
+
+//         return array('data' => null, 'error' => null);
+//     }
+
+function update_all_daily_temps($json) {
 
         $dict = json_decode($json, true);
         $values = "";
@@ -410,9 +380,27 @@ EOF;
         $values = rtrim($values, ",") . '';
 
         $sql =<<<EOF
-            WITH Record(Hour, Temperature) AS (VALUES $values)
-            UPDATE DailyTemps
-            SET Temperature = (SELECT Temperature FROM Record WHERE Record.Hour = DailyTemps.Hour)
+                    CREATE TEMPORARY TABLE Temp(                    
+                    Hour         TEXT    NOT NULL,                  
+                    Temperature        REAL    NOT NULL,
+                    PRIMARY KEY(Hour, Temperature))
+EOF;
+		        
+        $result = $this->db->exec($sql);
+        if (!$result)
+            return array('data' => null, 'error' => 'Query update_daily_temps Failed');
+
+        $sql=<<<EOF
+                    INSERT INTO Temp VALUES $values;
+EOF;
+
+        $result = $this->db->exec($sql);
+        if (!$result)
+            return array('data' => null, 'error' => 'Query update_daily_temps Failed');
+
+        $sql =<<<EOF
+            UPDATE DailyTemps 
+            SET Temperature = (SELECT Temp.Temperature FROM Temp WHERE Temp.Hour = DailyTemps.Hour)            
 EOF;
 
         $stmt = $this->db->prepare($sql); 
@@ -424,42 +412,105 @@ EOF;
         return array('data' => null, 'error' => null);
     }
 
+/////////// 'WITH'' SYNTAX NON AVAILABLE UNTIL 3.8.3 //////////////////
+//     function _update_daily_temps($targetTime, $json) {
+    	
+//     	$dict = json_decode($json, true);               
+//         $sqlUpdateTarget = "";
+//         $sqlUpdateValues = ""; 
+//         $sqlConditionTarget = "";
+//         $sqlConditionValue = "";                       
+
+// 		if (strrpos($targetTime, ':') != FALSE) {
+// 			$sqlUpdateTarget = "Day";	
+// 			$sqlConditionTarget = "Hour";
+// 			$sqlConditionValue = $targetTime;
+// 		}
+// 		else {
+// 			$sqlUpdateTarget = "Hour";	
+// 			$sqlConditionTarget = "Day";
+// 			$sqlConditionValue	= $this->format_day($targetTime);
+// 		}
+					    	   		
+// 		foreach ($dict as $time => $temperature) {
+//         	$sqlUpdateValues = $sqlUpdateValues . "('$time', $temperature),";
+// 	    };
+//     	$sqlUpdateValues = rtrim($sqlUpdateValues, ",") . '';    	
+		
+//     	$sql =<<<EOF
+//             WITH Record($sqlUpdateTarget, Temperature) AS (VALUES $sqlUpdateValues)
+//             UPDATE DailyTemps
+//             SET Temperature = (SELECT Temperature FROM Record WHERE Record.$sqlUpdateTarget = DailyTemps.$sqlUpdateTarget)
+//             WHERE $sqlConditionTarget LIKE :sqlConditionValue
+// EOF;        
+		
+//         $stmt = $this->db->prepare($sql);         
+//         //$stmt->bindValue(':sqlUpdateValues', $sqlUpdateValues); DOESN'T SEEM TO WORK...
+//         $stmt->bindValue(':sqlConditionValue', $sqlConditionValue);
+//         $result = $stmt->execute();
+
+//         if (!$result)
+//             return array('data' => null, 'error' => 'Query update_daily_temps Failed');
+
+//         return array('data' => null, 'error' => null);
+//     }
+
     function update_daily_temps($targetTime, $json) {
     	
     	$dict = json_decode($json, true);               
         $sqlUpdateTarget = "";
         $sqlUpdateValues = ""; 
         $sqlConditionTarget = "";
-        $sqlConditionFilter = "";                       
+        $sqlConditionValue = "";                       
 
 		if (strrpos($targetTime, ':') != FALSE) {
 			$sqlUpdateTarget = "Day";	
 			$sqlConditionTarget = "Hour";
-			$sqlConditionFilter = $targetTime;
+			$sqlConditionValue = $targetTime;
+
+            foreach ($dict as $day => $temperature) {
+        	    $sqlUpdateValues = $sqlUpdateValues . "('$day', '$sqlConditionValue', $temperature),";
+	        };
+    	    $sqlUpdateValues = rtrim($sqlUpdateValues, ",") . '';    	
 		}
 		else {
 			$sqlUpdateTarget = "Hour";	
 			$sqlConditionTarget = "Day";
-			$sqlConditionFilter	= $this->format_day($targetTime);
-		}
-					    	   		
-		foreach ($dict as $time => $temperature) {
-        	$sqlUpdateValues = $sqlUpdateValues . "('$time', $temperature),";
-	    };
-    	$sqlUpdateValues = rtrim($sqlUpdateValues, ",") . '';    	
+			$sqlConditionValue	= $this->format_day($targetTime);
+
+            foreach ($dict as $hour => $temperature) {
+        	    $sqlUpdateValues = $sqlUpdateValues . "('$sqlConditionValue', '$hour', $temperature),";
+	        };
+    	    $sqlUpdateValues = rtrim($sqlUpdateValues, ",") . '';    
+		}					    	   			
 		
     	$sql =<<<EOF
-            WITH Record($sqlUpdateTarget, Temperature) AS (VALUES $sqlUpdateValues)
-            UPDATE DailyTemps
-            SET Temperature = (SELECT Temperature FROM Record WHERE Record.$sqlUpdateTarget = DailyTemps.$sqlUpdateTarget)
-            WHERE $sqlConditionTarget LIKE :sqlConditionFilter
+                    CREATE TEMPORARY TABLE Temp(
+                    Day         TEXT    NOT NULL,  
+                    Hour         TEXT    NOT NULL,                  
+                    Temperature        REAL    NOT NULL,
+                    PRIMARY KEY(Day, Hour))
 EOF;
-		
-        $stmt = $this->db->prepare($sql);         
-        //$stmt->bindValue(':sqlUpdateValues', $sqlUpdateValues); DOESN'T SEEM TO WORK...
-        $stmt->bindValue(':sqlConditionFilter', $sqlConditionFilter);
-        $result = $stmt->execute();
+		        
+        $result = $this->db->exec($sql);
+        if (!$result)
+            return array('data' => null, 'error' => 'Query update_daily_temps Failed');
 
+        $sql=<<<EOF
+                    INSERT INTO Temp VALUES $sqlUpdateValues;
+EOF;
+
+        $result = $this->db->exec($sql);
+        if (!$result)
+            return array('data' => null, 'error' => 'Query update_daily_temps Failed');
+
+        $sql =<<<EOF
+            UPDATE DailyTemps 
+            SET Temperature = (SELECT Temp.Temperature FROM Temp WHERE Temp.Day = DailyTemps.Day AND Temp.Hour = DailyTemps.Hour)
+            WHERE $sqlConditionTarget LIKE '$sqlConditionValue'
+EOF;
+
+        $result = $this->db->exec($sql);
         if (!$result)
             return array('data' => null, 'error' => 'Query update_daily_temps Failed');
 
@@ -508,29 +559,7 @@ EOF;
             return array('data' => null, 'error' => 'Query reset_daily_temps_table Failed');
 
         $this->create_daily_temps_table();
-    }
-
-    //function create_scheduled_temps($json) {
-
-    //$dt = new DateTime($dict['dateBefore']);        
-
-    //    $dict = json_decode($json, true);
-    //    $values = "";
-    //    foreach ($dict as $date => $temperature) {
-    //        $date = $this->format_date($date);
-    //        $values = $values . "('$date', $temperature),";
-    //    };
-    //    $values = rtrim($values, ",") . ';';
-
-    //    $sql = "INSERT OR REPLACE INTO scheduled_temps(date, temperature) VALUES $values";
-
-    //    $result = $this->db->exec($sql);
-
-    //    if (!$result)
-    //        return array('data' => null, 'error' => 'Query create_scheduled_temps Failed');
-
-    //    return array('data' => null, 'error' => null);                   
-    //}
+    }    
 
     function create_scheduled_temps($interval, $temperatures) {
 
@@ -564,23 +593,6 @@ EOF;
         return array('data' => null, 'error' => null);                   
     }
 
-//    function create_scheduled_temp($date, $temp) {
-//        $sql =<<<EOF
-//            INSERT OR REPLACE INTO scheduled_temps(date, temperature)
-//            VALUES(:date, :temp);
-//EOF;
-
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':date', $this->format_date($date));
-//        $stmt->bindValue(':temp', $temp);
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query create_scheduled_temp Failed');
-
-//        return array('data' => null, 'error' => null);
-//    }
-
     function read_scheduled_dates() {
 
         $sql =<<<EOF
@@ -596,26 +608,6 @@ EOF;
 
         return $this->build_output_multiple_values($result, 'Date');    
     }
-
-//    function read_scheduled_temps_($dateBefore, $dateAfter) {
-
-//        $sql =<<<EOF
-//            SELECT temperature FROM scheduled_temps
-//            WHERE date > :dateBefore AND date < :dateAfter
-//            ORDER BY date
-//EOF;
-
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':dateBefore', $this->format_date($dateBefore));
-//        $stmt->bindValue(':dateAfter', $this->format_date($dateAfter));
-        
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query read_daily_temps Failed');
-
-//        return $this->build_output_multiple_values($result, 'temperature');   
-//    }
 
     function read_scheduled_temps($json) {
 
@@ -638,75 +630,6 @@ EOF;
 
         return $this->build_output_multiple_values($result, 'Temperature');   
     }
-
-//    function read_scheduled_temp($date) {
-//        $sql =<<<EOF
-//            SELECT Temperature FROM scheduled_temps
-//            WHERE date LIKE :date
-//EOF;
-
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':date', $this->format_date($date));
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query read_daily_temp Failed');
-
-//        return $this->build_output_single_value($result, 'temperature');   
-//    }
-
-//    function update_scheduled_temp($date, $temp) {
-//        $sql =<<<EOF
-//            UPDATE scheduled_temps
-//            SET temperature = :temp
-//            WHERE date LIKE :date
-//EOF;
-        
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':date', $this->format_date($date));
-//        $stmt->bindValue(':temp', $temp);
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query update_scheduled_temp Failed');
-
-//        return array('data' => null, 'error' => null);
-//    }
-
-//    function delete_scheduled_temp($date) {
-//        $sql =<<<EOF
-//            DELETE FROM scheduled_temps
-//            WHERE date LIKE :date
-//EOF;
-
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':date', $this->format_date($date));
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query delete_scheduled_temp Failed');
-
-//        return array('data' => null, 'error' => null);
-//    }
-
-//    function delete_scheduled_temps_($dates) {
-
-//        $_dates = join(',', $dates);  
-
-//        $sql =<<<EOF
-//            DELETE FROM scheduled_temps
-//            WHERE date IN :dates
-//EOF;
-
-//        $stmt = $this->db->prepare($sql); 
-//        $stmt->bindValue(':dates', $this->format_dates($_dates));
-//        $result = $stmt->execute();
-
-//        if (!$result)
-//            return array('data' => null, 'error' => 'Query delete_scheduled_temp Failed');
-
-//        return array('data' => null, 'error' => null);
-//    }
 
     function delete_scheduled_temps($json) {
 
