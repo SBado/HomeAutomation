@@ -258,7 +258,7 @@ class Memory implements AuthorizationCodeInterface,
     }
 
     public function unsetAccessToken($access_token)
-    {z
+    {
         unset($this->accessTokens[$access_token]);
     }
 
